@@ -4,9 +4,14 @@ import SearchIcon from './../../assets/img/search-icon.svg';
 // import { ACTIONS } from '../modules/actions';
 import './Popup.css';
 
-const LOCALSTORAGE_KEY = 'persistent-valid-url';
+enum URL_PREFIX {
+  HTTP = 'http://',
+  HTTPS = 'https://',
+}
 
+const LOCALSTORAGE_KEY = 'persistent-valid-url';
 const isValidUrl = (urlString: string) => {
+  console.log('urlString', urlString);
   try {
     return Boolean(new URL(urlString));
   } catch (e) {
@@ -17,14 +22,17 @@ const isValidUrl = (urlString: string) => {
 const Popup: React.FC<{}> = (props) => {
   const [currentURL, setCurrentURL] = React.useState<string>('');
   const [validURL, setValidURL] = React.useState<string>('');
+  const [prefix, setPrefix] = React.useState<URL_PREFIX>(URL_PREFIX.HTTPS);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (isValidUrl(currentURL)) {
-      setValidURL(currentURL);
-      localStorage.setItem(LOCALSTORAGE_KEY, currentURL);
+    const fullURL = `${prefix}${currentURL}`;
+    if (isValidUrl(fullURL)) {
+      console.log('valid url');
+      setValidURL(fullURL);
+      localStorage.setItem(LOCALSTORAGE_KEY, fullURL);
     } else {
-      alert('Invalid URL');
+      alert(`Invalid URL ${fullURL}`);
     }
   };
 
@@ -46,11 +54,11 @@ const Popup: React.FC<{}> = (props) => {
         <h1>Browser Buddy</h1>
         <form className="form" onSubmit={handleSubmit}>
           <div className="formControl">
-            <label htmlFor="url">URL</label>
+            <span className="prefix-selector">{prefix}</span>
             <input
               id="url"
               type="text"
-              placeholder="https://youtube.com"
+              placeholder="youtube.com"
               value={currentURL}
               onChange={handleInputChange}
             />

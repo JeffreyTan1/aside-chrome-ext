@@ -39,8 +39,8 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
-.header form .formControl label {
-  font-size: 1.1rem;
+.header form .formControl .prefix-selector {
+  font-size: 1rem;
   padding: 0.2rem 0.5rem;
   font-weight: bold;
   background: -webkit-linear-gradient(11deg, rgba(54, 230, 231, 1) 0%, rgba(42, 132, 194, 1) 100%);
