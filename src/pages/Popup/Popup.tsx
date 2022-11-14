@@ -11,7 +11,6 @@ enum URL_PREFIX {
 
 const LOCALSTORAGE_KEY = 'persistent-valid-url';
 const isValidUrl = (urlString: string) => {
-  console.log('urlString', urlString);
   try {
     return Boolean(new URL(urlString));
   } catch (e) {
