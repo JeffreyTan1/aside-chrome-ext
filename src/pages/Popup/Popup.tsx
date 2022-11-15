@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import SearchIcon from './../../assets/img/search-icon.svg';
-import StarIcon from './../../assets/img/star-icon.svg';
-import SettingsIcon from './../../assets/img/settings-icon.svg';
+import CloseIcon from './../../assets/img/close-icon.svg';
 // import { getActiveTabURL } from '../../utils';
 // import { ACTIONS } from '../modules/actions';
 import './Popup.scss';
@@ -27,6 +26,7 @@ const isValidUrl = (urlString: string) => {
 const Popup: React.FC<{}> = (props) => {
   const [currentURL, setCurrentURL] = React.useState<string>('');
   const [validURL, setValidURL] = React.useState<string>('');
+  const [iframeLoadCount, setIframeLoadCount] = React.useState<number>(0);
   const [prefix, setPrefix] = React.useState<URL_PREFIX>(URL_PREFIX.HTTPS);
   const [showInvalidURLError, setShowInvalidURLError] =
     React.useState<boolean>(false);
@@ -40,6 +40,7 @@ const Popup: React.FC<{}> = (props) => {
     if (isValidUrl(fullURL)) {
       setValidURL(fullURL);
       setShowInvalidURLError(false);
+      setIframeLoadCount((val) => val + 1);
       localStorage.setItem(CONSTANTS.LOCALSTORAGE_KEY, fullURL);
     } else {
       setShowInvalidURLError(true);
@@ -48,6 +49,11 @@ const Popup: React.FC<{}> = (props) => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentURL(e.target.value);
+  };
+
+  const handleClear = () => {
+    setCurrentURL('');
+    document.getElementById('url')?.focus();
   };
 
   useEffect(() => {
@@ -78,12 +84,6 @@ const Popup: React.FC<{}> = (props) => {
       <div className="header">
         <h1>Browser Buddy</h1>
         <div className="controls">
-          <button className="glass">
-            <img src={SettingsIcon} alt="settings" />
-          </button>
-          <button className="glass">
-            <img src={StarIcon} alt="save" />
-          </button>
           <form onSubmit={handleSubmit}>
             <div className="formControl glass">
               <span
@@ -102,10 +102,23 @@ const Popup: React.FC<{}> = (props) => {
                 value={currentURL}
                 onChange={handleInputChange}
               />
+              {currentURL && (
+                <button
+                  className="clear-btn transparent-no-border"
+                  onClick={handleClear}
+                  type="button"
+                >
+                  <img width={12} height={12} src={CloseIcon} alt="Clear" />
+                </button>
+              )}
+
+              <button
+                className="search-btn transparent-no-border"
+                type="submit"
+              >
+                <img width={20} height={20} src={SearchIcon} alt="search" />
+              </button>
             </div>
-            <button className="glass">
-              <img src={SearchIcon} alt="search" />
-            </button>
           </form>
         </div>
       </div>
@@ -122,6 +135,7 @@ const Popup: React.FC<{}> = (props) => {
         ) : (
           <iframe
             id={CONSTANTS.IFRAME_ID}
+            key={iframeLoadCount}
             title={`Browser Buddy - ${validURL}`}
             src={validURL}
             loading="lazy"
@@ -133,3 +147,12 @@ const Popup: React.FC<{}> = (props) => {
 };
 
 export default Popup;
+
+// import StarIcon from './../../assets/img/star-icon.svg';
+// import SettingsIcon from './../../assets/img/settings-icon.svg';
+// <button className="glass">
+//   <img src={SettingsIcon} alt="settings" />
+// </button>
+// <button className="glass">
+//   <img src={StarIcon} alt="save" />
+// </button>
