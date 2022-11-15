@@ -26,6 +26,6 @@
     }
   ],
   "permissions": [
-    "downloads"
+    "storage"
   ]
 }

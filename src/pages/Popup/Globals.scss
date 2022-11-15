@@ -29,7 +29,10 @@ input:-webkit-autofill:focus {
   -webkit-text-fill-color: transparent;
 }
 
-.transparent-no-border {
+.transparent {
   background: transparent;
+}
+
+.no-border {
   border: none;
 }

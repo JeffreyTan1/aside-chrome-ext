@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import SearchIcon from './../../assets/img/search-icon.svg';
 import CloseIcon from './../../assets/img/close-icon.svg';
+import StarIcon from './../../assets/img/star-icon.svg';
 // import { getActiveTabURL } from '../../utils';
 // import { ACTIONS } from '../modules/actions';
 import './Popup.scss';
@@ -24,8 +25,9 @@ const isValidUrl = (urlString: string) => {
 };
 
 const Popup: React.FC<{}> = (props) => {
-  const [currentURL, setCurrentURL] = React.useState<string>('');
+  const [inputURL, setInputURL] = React.useState<string>('');
   const [validURL, setValidURL] = React.useState<string>('');
+  const [showIframe, setShowIframe] = React.useState<boolean>(false);
   const [iframeLoadCount, setIframeLoadCount] = React.useState<number>(0);
   const [prefix, setPrefix] = React.useState<URL_PREFIX>(URL_PREFIX.HTTPS);
   const [showInvalidURLError, setShowInvalidURLError] =
@@ -36,47 +38,65 @@ const Popup: React.FC<{}> = (props) => {
     // unfocus input field with id "url"
     document.getElementById('url')?.blur();
 
-    const fullURL = `${prefix}${currentURL}`;
+    const fullURL = `${prefix}${inputURL}`;
     if (isValidUrl(fullURL)) {
       setValidURL(fullURL);
       setShowInvalidURLError(false);
       setIframeLoadCount((val) => val + 1);
-      localStorage.setItem(CONSTANTS.LOCALSTORAGE_KEY, fullURL);
+
+      chrome.storage.sync.set({
+        [CONSTANTS.LOCALSTORAGE_KEY]: fullURL,
+      });
     } else {
       setShowInvalidURLError(true);
     }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrentURL(e.target.value);
+    setInputURL(e.target.value);
   };
 
   const handleClear = () => {
-    setCurrentURL('');
+    setInputURL('');
     document.getElementById('url')?.focus();
+  };
+
+  const handlePrefixChange = () => {
+    setPrefix(prefix === URL_PREFIX.HTTP ? URL_PREFIX.HTTPS : URL_PREFIX.HTTP);
   };
 
   useEffect(() => {
     // TODO: fix performance issue
-    const persistentValidURL = localStorage.getItem(CONSTANTS.LOCALSTORAGE_KEY);
-    if (!persistentValidURL) return;
+    const getURL = async () => {
+      const persistentValidURL = await new Promise<string>((resolve) => {
+        chrome.storage.sync.get([CONSTANTS.LOCALSTORAGE_KEY], (result) => {
+          resolve(result[CONSTANTS.LOCALSTORAGE_KEY]);
+        });
+      });
 
-    // parse prefix booleans
-    const HTTPPrefix = persistentValidURL.startsWith(URL_PREFIX.HTTP);
-    const HTTPSPrefix = persistentValidURL.startsWith(URL_PREFIX.HTTPS);
-    setPrefix(HTTPPrefix ? URL_PREFIX.HTTP : URL_PREFIX.HTTPS);
+      if (!persistentValidURL) return;
 
-    if (!HTTPPrefix && !HTTPSPrefix) return;
+      // parse prefix booleans
+      const HTTPPrefix = persistentValidURL.startsWith(URL_PREFIX.HTTP);
+      const HTTPSPrefix = persistentValidURL.startsWith(URL_PREFIX.HTTPS);
+      setPrefix(HTTPPrefix ? URL_PREFIX.HTTP : URL_PREFIX.HTTPS);
 
-    const URLWithoutPrefix = persistentValidURL.replace(
-      HTTPPrefix ? URL_PREFIX.HTTP : URL_PREFIX.HTTPS,
-      ''
-    );
+      if (!HTTPPrefix && !HTTPSPrefix) return;
 
-    if (persistentValidURL) {
+      const URLWithoutPrefix = persistentValidURL.replace(
+        HTTPPrefix ? URL_PREFIX.HTTP : URL_PREFIX.HTTPS,
+        ''
+      );
       setValidURL(persistentValidURL);
-      setCurrentURL(URLWithoutPrefix);
-    }
+      setInputURL(URLWithoutPrefix);
+    };
+
+    // Delay iframe rendering to prevent performance issues
+    setTimeout(() => {
+      setShowIframe(true);
+    }, 10);
+
+    getURL();
   }, []);
 
   return (
@@ -86,60 +106,63 @@ const Popup: React.FC<{}> = (props) => {
         <div className="controls">
           <form onSubmit={handleSubmit}>
             <div className="formControl glass">
-              <span
-                className={`prefix-selector ${
+              <button
+                type="button"
+                className={`no-border prefix-selector  ${
                   prefix === URL_PREFIX.HTTP
                     ? 'red-orange-gradient-text'
                     : 'blue-green-gradient-text'
                 }`}
+                onClick={handlePrefixChange}
               >
                 {prefix}
-              </span>
+              </button>
               <input
                 id="url"
                 type="text"
                 placeholder="Enter URL"
-                value={currentURL}
+                value={inputURL}
                 onChange={handleInputChange}
               />
-              {currentURL && (
+              {inputURL && (
                 <button
-                  className="clear-btn transparent-no-border"
+                  className="clear-btn transparent no-border"
                   onClick={handleClear}
                   type="button"
                 >
-                  <img width={12} height={12} src={CloseIcon} alt="Clear" />
+                  <img width={13} height={13} src={CloseIcon} alt="Clear" />
                 </button>
               )}
 
               <button
-                className="search-btn transparent-no-border"
+                className="search-btn transparent no-border"
                 type="submit"
               >
                 <img width={20} height={20} src={SearchIcon} alt="search" />
               </button>
             </div>
           </form>
+          <button className="glass">
+            <img width={16} height={16} src={StarIcon} alt="save" />
+          </button>
         </div>
       </div>
 
       <div className="content">
         {showInvalidURLError ? (
           <div className="placeholder">
-            <h1>Browser Buddy</h1>
-            <p>
-              Enter a URL to get started. You can also save your favorite
-              websites for quick access.
-            </p>
+            <p>Invalid URL entered. Please enter a valid URL and try again.</p>
           </div>
         ) : (
-          <iframe
-            id={CONSTANTS.IFRAME_ID}
-            key={iframeLoadCount}
-            title={`Browser Buddy - ${validURL}`}
-            src={validURL}
-            loading="lazy"
-          />
+          showIframe && (
+            <iframe
+              id={CONSTANTS.IFRAME_ID}
+              key={iframeLoadCount}
+              title={`Browser Buddy - ${validURL}`}
+              src={validURL}
+              loading="lazy"
+            />
+          )
         )}
       </div>
     </div>
