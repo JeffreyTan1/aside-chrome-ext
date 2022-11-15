@@ -1,4 +1,4 @@
-@import "https://fonts.cdnfonts.com/css/sf-pro-display";
+@import url("https://fonts.cdnfonts.com/css/sf-pro-display");
 
 body {
   margin: 0;
@@ -12,9 +12,12 @@ button {
   font-family: 'SF Pro Display', sans-serif;
 }
 
+input:-webkit-autofill {
+  -webkit-background-clip: text;
+}
 .container {
   width: 46rem;
-  height: 32rem;
+  height: 34rem;
 }
 
 .glass {
@@ -63,6 +66,11 @@ button {
     align-items: center;
     column-gap: 0.5rem;
 
+    form {
+      display: flex;
+      align-items: center;
+      column-gap: 0.5rem;
+    }
     .formControl {
       position: relative;
       .prefix-selector {
@@ -86,13 +94,13 @@ button {
     }
 
     button {
-      width: 1.5rem;
-      height: 1.5rem;
+      width: 1.8rem;
+      height: 1.8rem;
       position: relative;
       cursor: pointer;
       img {
-        width: 0.9rem;
-        height: 0.9rem;
+        width: 1.1rem;
+        height: 1.1rem;
         position: absolute;
         top: 50%;
         left: 50%;
