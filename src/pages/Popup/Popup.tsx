@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import SearchIcon from './../../assets/img/search-icon.svg';
 // import { getActiveTabURL } from '../../utils';
 // import { ACTIONS } from '../modules/actions';
-import './Popup.css';
+import './Popup.scss';
 
 enum URL_PREFIX {
   HTTP = 'http://',
@@ -27,7 +27,6 @@ const Popup: React.FC<{}> = (props) => {
     e.preventDefault();
     const fullURL = `${prefix}${currentURL}`;
     if (isValidUrl(fullURL)) {
-      console.log('valid url');
       setValidURL(fullURL);
       localStorage.setItem(LOCALSTORAGE_KEY, fullURL);
     } else {
@@ -40,10 +39,25 @@ const Popup: React.FC<{}> = (props) => {
   };
 
   useEffect(() => {
+    // TODO: fix performance issue
     const persistentValidURL = localStorage.getItem(LOCALSTORAGE_KEY);
+    if (!persistentValidURL) return;
+
+    // parse prefix booleans
+    const HTTPPrefix = persistentValidURL.startsWith(URL_PREFIX.HTTP);
+    const HTTPSPrefix = persistentValidURL.startsWith(URL_PREFIX.HTTPS);
+    setPrefix(HTTPPrefix ? URL_PREFIX.HTTP : URL_PREFIX.HTTPS);
+
+    if (!HTTPPrefix && !HTTPSPrefix) return;
+
+    const URLWithoutPrefix = persistentValidURL.replace(
+      HTTPPrefix ? URL_PREFIX.HTTP : URL_PREFIX.HTTPS,
+      ''
+    );
+
     if (persistentValidURL) {
       setValidURL(persistentValidURL);
-      setCurrentURL(persistentValidURL);
+      setCurrentURL(URLWithoutPrefix);
     }
   }, []);
 
