@@ -12,9 +12,11 @@ button {
   font-family: 'SF Pro Display', sans-serif;
 }
 
-input:-webkit-autofill {
-  -webkit-background-clip: text;
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  transition: background-color 600000s 0s, color 600000s 0s;
 }
+
 .container {
   width: 46rem;
   height: 34rem;
