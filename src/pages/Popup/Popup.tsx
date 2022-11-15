@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import SearchIcon from './../../assets/img/search-icon.svg';
+import StarIcon from './../../assets/img/star-icon.svg';
+import AddStarIcon from './../../assets/img/add-star-icon.svg';
 // import { getActiveTabURL } from '../../utils';
 // import { ACTIONS } from '../modules/actions';
 import './Popup.scss';
@@ -23,7 +25,7 @@ const Popup: React.FC<{}> = (props) => {
   const [validURL, setValidURL] = React.useState<string>('');
   const [prefix, setPrefix] = React.useState<URL_PREFIX>(URL_PREFIX.HTTPS);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSearch = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const fullURL = `${prefix}${currentURL}`;
     if (isValidUrl(fullURL)) {
@@ -65,21 +67,35 @@ const Popup: React.FC<{}> = (props) => {
     <div className="container">
       <div className="header">
         <h1>Browser Buddy</h1>
-        <form className="form" onSubmit={handleSubmit}>
-          <div className="formControl">
-            <span className="prefix-selector">{prefix}</span>
+        <div className="controls">
+          <button className="glass">
+            <img src={StarIcon} alt="save" />
+          </button>
+          <button className="glass">
+            <img src={AddStarIcon} alt="add save" />
+          </button>
+          <div className="formControl glass">
+            <span
+              className={`prefix-selector ${
+                prefix === URL_PREFIX.HTTP
+                  ? 'red-orange-gradient-text'
+                  : 'blue-green-gradient-text'
+              }`}
+            >
+              {prefix}
+            </span>
             <input
               id="url"
               type="text"
-              placeholder="youtube.com"
+              placeholder="Enter URL"
               value={currentURL}
               onChange={handleInputChange}
             />
           </div>
-          <button type="submit">
+          <button className="glass" onClick={handleSearch}>
             <img src={SearchIcon} alt="search" />
           </button>
-        </form>
+        </div>
       </div>
 
       <div className="content">

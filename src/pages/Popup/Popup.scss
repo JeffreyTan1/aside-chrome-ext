@@ -5,14 +5,48 @@ body {
   font-family: 'SF Pro Display', sans-serif;
 }
 
+input,
+select,
+textarea,
+button {
+  font-family: 'SF Pro Display', sans-serif;
+}
+
 .container {
   width: 46rem;
   height: 32rem;
 }
 
+.glass {
+  background: rgba(255, 255, 255, 0.575);
+  box-shadow: 0px 3px 45px 0 rgb(3, 5, 41);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+}
+
+.glass:hover{
+  background: rgba(255, 255, 255, 0.70);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: 300ms;
+}
+
+.blue-green-gradient-text {
+  background: -webkit-linear-gradient(247deg, rgba(79, 106, 244, 1) 0%, rgba(0, 189, 208, 1) 91%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.red-orange-gradient-text {
+  background: -webkit-linear-gradient(304deg, rgba(245, 52, 46, 1) 0%, rgba(231, 207, 44, 1) 91%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .header {
   padding: 0.5rem 0.5rem;
-  background: -webkit-linear-gradient(4deg, rgba(63, 94, 251, 1) 0%, rgba(255, 59, 99, 1) 100%);
+  background: -webkit-linear-gradient(60deg, rgba(63, 94, 251, 1) 0%, rgba(255, 59, 99, 1) 100%);
   display: flex;
   justify-content: space-between;
 
@@ -21,36 +55,33 @@ body {
     padding: 0;
     margin: 0;
     color: white;
+    font-weight: normal;
   }
 
-  form {
+  .controls {
     display: flex;
     align-items: center;
     column-gap: 0.5rem;
 
     .formControl {
-      background: rgba(255, 255, 255, 0.75);
-      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-
+      position: relative;
       .prefix-selector {
         font-size: 1rem;
-        padding: 0.2rem 0.5rem;
+        padding: 0.2rem 0rem 0.2rem 0.5rem;
         font-weight: bold;
-        background: -webkit-linear-gradient(11deg, rgba(54, 230, 231, 1) 0%, rgba(42, 132, 194, 1) 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
       }
 
       input {
         font-size: 1rem;
-        border: none;
+        color:rgba(0, 0, 0, 0.932);
         padding: 0.2rem 0.5rem;
+        border: none;
         background: transparent;
         outline: none;
+      }
+
+      input:-internal-autofill-selected {
+        // do nothing
       }
     }
 
@@ -58,17 +89,10 @@ body {
       width: 1.5rem;
       height: 1.5rem;
       position: relative;
-      border-radius: 100%;
-      background: rgba(255, 255, 255, 0.75);
-      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-
+      cursor: pointer;
       img {
-        width: 0.8rem;
-        height: 0.8rem;
+        width: 0.9rem;
+        height: 0.9rem;
         position: absolute;
         top: 50%;
         left: 50%;
