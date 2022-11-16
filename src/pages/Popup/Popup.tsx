@@ -1,12 +1,4 @@
-import React, {
-  useEffect,
-  useState,
-  useRef,
-  RefObject,
-  FC,
-  ChangeEvent,
-  FormEvent,
-} from 'react';
+import React, { useEffect, useState, FC, ChangeEvent, FormEvent } from 'react';
 import SearchIcon from './../../assets/img/search-icon.svg';
 import CloseIcon from './../../assets/img/close-icon.svg';
 import HeartIcon from './../../assets/img/heart-icon.svg';
