@@ -42,8 +42,6 @@ const Popup: FC<{}> = (props) => {
   const [showIframe, setShowIframe] = useState<boolean>(false);
   const [iframeLoadCount, setIframeLoadCount] = useState<number>(0);
 
-  const inputRef = useRef<HTMLInputElement>(null);
-
   const updateNewURL = (prefix: URL_PREFIX) => {
     // unfocus input field with id "url"
     document.getElementById('url')?.blur();
@@ -140,14 +138,13 @@ const Popup: FC<{}> = (props) => {
                 </button>
               </div>
               <input
-                ref={inputRef}
                 id="url"
                 type="text"
                 placeholder="Enter URL"
                 value={inputURL}
                 onChange={handleInputChange}
               />
-              {inputURL && inputRef.current === document.activeElement && (
+              {inputURL && (
                 <button
                   className="clear-btn transparent no-border"
                   onClick={handleClear}
