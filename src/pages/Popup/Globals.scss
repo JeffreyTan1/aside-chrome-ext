@@ -32,23 +32,4 @@ input:-webkit-autofill:focus {
   transition: background-color 600000s 0s, color 600000s 0s;
 }
 
-.blue-green-gradient-text {
-  background: -webkit-linear-gradient(90deg, rgba(79, 106, 244, 1) 0%, rgba(0, 189, 208, 1) 91%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.red-orange-gradient-text {
-  background: -webkit-linear-gradient(304deg, rgba(245, 52, 46, 1) 0%, rgba(231, 207, 44, 1) 91%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.transparent {
-  background: transparent;
-}
-
-.no-border {
-  border: none;
-}
 

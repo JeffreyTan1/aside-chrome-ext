@@ -33,8 +33,7 @@ const Popup: React.FC<{}> = (props) => {
   const [showInvalidURLError, setShowInvalidURLError] =
     useState<boolean>(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const updateNewURL = (prefix: URL_PREFIX) => {
     // unfocus input field with id "url"
     document.getElementById('url')?.blur();
     const trimmedURL = inputURL.trim();
@@ -53,6 +52,11 @@ const Popup: React.FC<{}> = (props) => {
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    updateNewURL(prefix);
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputURL(e.target.value);
   };
@@ -62,7 +66,10 @@ const Popup: React.FC<{}> = (props) => {
   };
 
   const handlePrefixChange = () => {
-    setPrefix(prefix === URL_PREFIX.HTTP ? URL_PREFIX.HTTPS : URL_PREFIX.HTTP);
+    const newPrefix =
+      prefix === URL_PREFIX.HTTP ? URL_PREFIX.HTTPS : URL_PREFIX.HTTP;
+    setPrefix(newPrefix);
+    updateNewURL(newPrefix);
   };
 
   useEffect(() => {
@@ -87,6 +94,7 @@ const Popup: React.FC<{}> = (props) => {
         HTTPPrefix ? URL_PREFIX.HTTP : URL_PREFIX.HTTPS,
         ''
       );
+      setPrefix(HTTPPrefix ? URL_PREFIX.HTTP : URL_PREFIX.HTTPS);
       setValidURL(persistentValidURL);
       setInputURL(URLWithoutPrefix);
     };
@@ -110,14 +118,18 @@ const Popup: React.FC<{}> = (props) => {
             <div className="formControl glass">
               <button
                 type="button"
-                className={`no-border prefix-selector  ${
-                  prefix === URL_PREFIX.HTTP
-                    ? 'red-orange-gradient-text'
-                    : 'blue-green-gradient-text'
-                }`}
+                className="no-border prefix-selector-container"
                 onClick={handlePrefixChange}
               >
-                {prefix}
+                <span
+                  className={`bounce-active prefix-selector-text ${
+                    prefix === URL_PREFIX.HTTP
+                      ? 'red-orange-gradient-text'
+                      : 'blue-green-gradient-text'
+                  }`}
+                >
+                  {prefix}
+                </span>
               </button>
               <input
                 id="url"

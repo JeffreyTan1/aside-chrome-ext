@@ -1,0 +1,46 @@
+.blue-green-gradient-text {
+  background: -webkit-linear-gradient(90deg, rgba(79, 106, 244, 1) 0%, rgba(0, 189, 208, 1) 91%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.red-orange-gradient-text {
+  background: -webkit-linear-gradient(300deg, rgb(255, 55, 48) 0%, rgb(199, 129, 0) 81%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.transparent {
+  background: transparent;
+}
+
+.no-border {
+  border: none;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.575);
+  box-shadow: 0px 3px 10px 0 rgba(3, 5, 41, 0.425);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  transition: 300ms;
+}
+
+.glass:hover {
+  background: rgba(255, 255, 255, 0.70);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: 300ms;
+}
+
+.bounce-active {
+  transition: 150ms;
+}
+
+.bounce-active:active {
+  transform: scale(0.95);
+  transition: 300ms;
+}
