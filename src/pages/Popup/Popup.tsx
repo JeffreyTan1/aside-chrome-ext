@@ -27,11 +27,11 @@ const isValidUrl = (urlString: string) => {
 const Popup: React.FC<{}> = (props) => {
   const [inputURL, setInputURL] = useState<string>('');
   const [validURL, setValidURL] = useState<string>('');
-  const [showIframe, setShowIframe] = useState<boolean>(false);
-  const [iframeLoadCount, setIframeLoadCount] = useState<number>(0);
   const [prefix, setPrefix] = useState<URL_PREFIX>(URL_PREFIX.HTTPS);
   const [showInvalidURLError, setShowInvalidURLError] =
     useState<boolean>(false);
+  const [showIframe, setShowIframe] = useState<boolean>(false);
+  const [iframeLoadCount, setIframeLoadCount] = useState<number>(0);
 
   const updateNewURL = (prefix: URL_PREFIX) => {
     // unfocus input field with id "url"
@@ -52,9 +52,11 @@ const Popup: React.FC<{}> = (props) => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    updateNewURL(prefix);
+  const handlePrefixChange = () => {
+    const newPrefix =
+      prefix === URL_PREFIX.HTTP ? URL_PREFIX.HTTPS : URL_PREFIX.HTTP;
+    setPrefix(newPrefix);
+    updateNewURL(newPrefix);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,15 +67,12 @@ const Popup: React.FC<{}> = (props) => {
     setInputURL('');
   };
 
-  const handlePrefixChange = () => {
-    const newPrefix =
-      prefix === URL_PREFIX.HTTP ? URL_PREFIX.HTTPS : URL_PREFIX.HTTP;
-    setPrefix(newPrefix);
-    updateNewURL(newPrefix);
+  const handleSearchSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    updateNewURL(prefix);
   };
 
   useEffect(() => {
-    // TODO: fix performance issue
     const getURL = async () => {
       const persistentValidURL = await new Promise<string>((resolve) => {
         chrome.storage.sync.get([CONSTANTS.LOCALSTORAGE_KEY], (result) => {
@@ -114,7 +113,7 @@ const Popup: React.FC<{}> = (props) => {
           <h1>Browser Buddy</h1>
         </div>
         <div className="controls">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSearchSubmit}>
             <div className="formControl glass">
               <button
                 type="button"
