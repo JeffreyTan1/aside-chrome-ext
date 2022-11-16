@@ -37,10 +37,10 @@
 }
 
 .bounce-active {
-  transition: 150ms;
+  transition: 300ms;
 }
 
 .bounce-active:active {
-  transform: scale(0.95);
-  transition: 300ms;
+  transform: scale(0.94);
+  transition: 100ms;
 }
