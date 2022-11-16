@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import SearchIcon from './../../assets/img/search-icon.svg';
 import CloseIcon from './../../assets/img/close-icon.svg';
-import StarIcon from './../../assets/img/star-icon.svg';
+import HeartIcon from './../../assets/img/heart-icon.svg';
 // import { getActiveTabURL } from '../../utils';
 // import { ACTIONS } from '../modules/actions';
 import './Popup.scss';
@@ -25,24 +25,25 @@ const isValidUrl = (urlString: string) => {
 };
 
 const Popup: React.FC<{}> = (props) => {
-  const [inputURL, setInputURL] = React.useState<string>('');
-  const [validURL, setValidURL] = React.useState<string>('');
-  const [showIframe, setShowIframe] = React.useState<boolean>(false);
-  const [iframeLoadCount, setIframeLoadCount] = React.useState<number>(0);
-  const [prefix, setPrefix] = React.useState<URL_PREFIX>(URL_PREFIX.HTTPS);
+  const [inputURL, setInputURL] = useState<string>('');
+  const [validURL, setValidURL] = useState<string>('');
+  const [showIframe, setShowIframe] = useState<boolean>(false);
+  const [iframeLoadCount, setIframeLoadCount] = useState<number>(0);
+  const [prefix, setPrefix] = useState<URL_PREFIX>(URL_PREFIX.HTTPS);
   const [showInvalidURLError, setShowInvalidURLError] =
-    React.useState<boolean>(false);
+    useState<boolean>(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // unfocus input field with id "url"
     document.getElementById('url')?.blur();
-
-    const fullURL = `${prefix}${inputURL}`;
+    const trimmedURL = inputURL.trim();
+    const fullURL = `${prefix}${trimmedURL}`;
     if (isValidUrl(fullURL)) {
       setValidURL(fullURL);
       setShowInvalidURLError(false);
       setIframeLoadCount((val) => val + 1);
+      setInputURL(trimmedURL);
 
       chrome.storage.sync.set({
         [CONSTANTS.LOCALSTORAGE_KEY]: fullURL,
@@ -58,7 +59,6 @@ const Popup: React.FC<{}> = (props) => {
 
   const handleClear = () => {
     setInputURL('');
-    document.getElementById('url')?.focus();
   };
 
   const handlePrefixChange = () => {
@@ -94,7 +94,7 @@ const Popup: React.FC<{}> = (props) => {
     // Delay iframe rendering to prevent performance issues
     setTimeout(() => {
       setShowIframe(true);
-    }, 10);
+    }, 100);
 
     getURL();
   }, []);
@@ -102,7 +102,9 @@ const Popup: React.FC<{}> = (props) => {
   return (
     <div className="container">
       <div className="header">
-        <h1>Browser Buddy</h1>
+        <div className="logo-container">
+          <h1>Browser Buddy</h1>
+        </div>
         <div className="controls">
           <form onSubmit={handleSubmit}>
             <div className="formControl glass">
@@ -143,7 +145,7 @@ const Popup: React.FC<{}> = (props) => {
             </div>
           </form>
           <button className="glass">
-            <img width={16} height={16} src={StarIcon} alt="save" />
+            <img width={18} height={18} src={HeartIcon} alt="save" />
           </button>
         </div>
       </div>

@@ -2,7 +2,7 @@
 
 .container {
   width: 46rem;
-  height: 34rem;
+  height: 33rem;
 }
 
 .glass {
@@ -27,6 +27,12 @@
   display: flex;
   justify-content: space-between;
 
+  .logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   h1 {
     padding: 0;
     margin: 0;
@@ -49,26 +55,25 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
-
       .prefix-selector {
+        height: 100%;
         font-size: 1rem;
-        padding: 0.2rem 0rem 0.2rem 0.5rem;
+        padding: 0rem 0.5rem 0rem 0.5rem;
         font-weight: bold;
         cursor: pointer;
+        border-right: 1px solid rgba(109, 109, 109, 0.53);
       }
-
       .clear-btn {
         position: absolute;
         top: 50%;
-        right: 7%;
+        right: 1.5rem;
         transform: translate(-50%, -50%);
       }
-
       .search-btn {
         margin-right: 0.3rem;
       }
-
       input {
+        min-width: 13rem;
         font-size: 1rem;
         color:rgba(0, 0, 0, 0.822);
         padding: 0.2rem 0.5rem;
@@ -78,15 +83,11 @@
       }
     }
     button {
-      padding: 0.9rem;
-      position: relative;
+      padding: 0.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
-      img {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
     }
   }
 }
@@ -94,7 +95,15 @@
 .content {
   width: 100%;
   height: 100%;
-
+  
+  .placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: medium;
+  }
   iframe {
     width: 100%;
     height: 100%;
