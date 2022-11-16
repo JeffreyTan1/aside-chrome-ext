@@ -1,4 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  RefObject,
+  FC,
+  ChangeEvent,
+  FormEvent,
+} from 'react';
 import SearchIcon from './../../assets/img/search-icon.svg';
 import CloseIcon from './../../assets/img/close-icon.svg';
 import HeartIcon from './../../assets/img/heart-icon.svg';
@@ -24,14 +32,17 @@ const isValidUrl = (urlString: string) => {
   }
 };
 
-const Popup: React.FC<{}> = (props) => {
+const Popup: FC<{}> = (props) => {
   const [inputURL, setInputURL] = useState<string>('');
   const [validURL, setValidURL] = useState<string>('');
   const [prefix, setPrefix] = useState<URL_PREFIX>(URL_PREFIX.HTTPS);
   const [showInvalidURLError, setShowInvalidURLError] =
     useState<boolean>(false);
+
   const [showIframe, setShowIframe] = useState<boolean>(false);
   const [iframeLoadCount, setIframeLoadCount] = useState<number>(0);
+
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const updateNewURL = (prefix: URL_PREFIX) => {
     // unfocus input field with id "url"
@@ -59,7 +70,7 @@ const Popup: React.FC<{}> = (props) => {
     updateNewURL(newPrefix);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInputURL(e.target.value);
   };
 
@@ -67,7 +78,7 @@ const Popup: React.FC<{}> = (props) => {
     setInputURL('');
   };
 
-  const handleSearchSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSearchSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     updateNewURL(prefix);
   };
@@ -115,29 +126,28 @@ const Popup: React.FC<{}> = (props) => {
         <div className="controls">
           <form onSubmit={handleSearchSubmit}>
             <div className="formControl glass">
-              <button
-                type="button"
-                className="no-border prefix-selector-container"
-                onClick={handlePrefixChange}
-              >
-                <span
-                  className={`bounce-active prefix-selector-text ${
+              <div className="prefix-selector-container">
+                <button
+                  type="button"
+                  onClick={handlePrefixChange}
+                  className={`no-border bounce-active prefix-selector-text ${
                     prefix === URL_PREFIX.HTTP
                       ? 'red-orange-gradient-text'
                       : 'blue-green-gradient-text'
                   }`}
                 >
                   {prefix}
-                </span>
-              </button>
+                </button>
+              </div>
               <input
+                ref={inputRef}
                 id="url"
                 type="text"
                 placeholder="Enter URL"
                 value={inputURL}
                 onChange={handleInputChange}
               />
-              {inputURL && (
+              {inputURL && inputRef.current === document.activeElement && (
                 <button
                   className="clear-btn transparent no-border"
                   onClick={handleClear}
@@ -146,7 +156,6 @@ const Popup: React.FC<{}> = (props) => {
                   <img width={13} height={13} src={CloseIcon} alt="Clear" />
                 </button>
               )}
-
               <button
                 className="search-btn transparent no-border"
                 type="submit"
