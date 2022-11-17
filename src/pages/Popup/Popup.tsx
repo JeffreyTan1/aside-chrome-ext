@@ -1,6 +1,7 @@
 import React, { useEffect, useState, FC, ChangeEvent, FormEvent } from 'react';
 import SearchIcon from './../../assets/img/search-icon.svg';
 import HeartIcon from './../../assets/img/heart-icon.svg';
+import BookmarkIcon from './../../assets/img/bookmark-icon.svg';
 import './Popup.scss';
 import Input from './Input';
 import Logo from './Logo';
@@ -31,10 +32,8 @@ const Popup: FC<{}> = (props) => {
   const [prefix, setPrefix] = useState<URL_PREFIX>(URL_PREFIX.HTTPS);
   const [showInvalidURLError, setShowInvalidURLError] =
     useState<boolean>(false);
-
   const [showIframe, setShowIframe] = useState<boolean>(false);
   const [iframeLoadCount, setIframeLoadCount] = useState<number>(0);
-
   const [blurInputToggleCount, setBlurInputToggleCount] = useState<number>(0);
 
   const updateNewURL = (prefix: URL_PREFIX) => {
@@ -122,6 +121,13 @@ const Popup: FC<{}> = (props) => {
           <Logo />
         </div>
         <div className="controls">
+          <button className="glass bounce-active">
+            <img width={18} height={18} src={HeartIcon} alt="heart" />
+          </button>
+          <button className="glass bounce-active">
+            <img width={18} height={18} src={BookmarkIcon} alt="bookmark" />
+          </button>
+
           <form onSubmit={handleSearchSubmit}>
             <div className="formControl glass">
               <div className="prefix-selector-container">
@@ -152,9 +158,6 @@ const Popup: FC<{}> = (props) => {
               </button>
             </div>
           </form>
-          <button className="glass">
-            <img width={18} height={18} src={HeartIcon} alt="save" />
-          </button>
         </div>
       </div>
 
