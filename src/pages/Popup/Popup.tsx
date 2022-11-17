@@ -1,10 +1,10 @@
 import React, { useEffect, useState, FC, ChangeEvent, FormEvent } from 'react';
 import SearchIcon from './../../assets/img/search-icon.svg';
-import CloseIcon from './../../assets/img/close-icon.svg';
 import HeartIcon from './../../assets/img/heart-icon.svg';
+import './Popup.scss';
+import Input from './Input';
 // import { getActiveTabURL } from '../../utils';
 // import { ACTIONS } from '../modules/actions';
-import './Popup.scss';
 
 enum URL_PREFIX {
   HTTP = 'http://',
@@ -34,9 +34,10 @@ const Popup: FC<{}> = (props) => {
   const [showIframe, setShowIframe] = useState<boolean>(false);
   const [iframeLoadCount, setIframeLoadCount] = useState<number>(0);
 
+  const [blurInputToggleCount, setBlurInputToggleCount] = useState<number>(0);
+
   const updateNewURL = (prefix: URL_PREFIX) => {
-    // unfocus input field with id "url"
-    document.getElementById('url')?.blur();
+    setBlurInputToggleCount((prev) => prev + 1);
     const trimmedURL = inputURL.trim();
     const fullURL = `${prefix}${trimmedURL}`;
     if (isValidUrl(fullURL)) {
@@ -61,11 +62,17 @@ const Popup: FC<{}> = (props) => {
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setInputURL(e.target.value);
-  };
+    const newURL = e.target.value;
+    const startsWithHTTP = newURL.startsWith(URL_PREFIX.HTTP);
+    const startsWithHTTPS = newURL.startsWith(URL_PREFIX.HTTPS);
 
-  const handleClear = () => {
-    setInputURL('');
+    if (startsWithHTTP || startsWithHTTPS) {
+      const newPrefix = startsWithHTTP ? URL_PREFIX.HTTP : URL_PREFIX.HTTPS;
+      setPrefix(newPrefix);
+      setInputURL(newURL.replace(newPrefix, ''));
+    } else {
+      setInputURL(newURL);
+    }
   };
 
   const handleSearchSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -129,22 +136,13 @@ const Popup: FC<{}> = (props) => {
                   {prefix}
                 </button>
               </div>
-              <input
-                id="url"
-                type="text"
-                placeholder="Enter URL"
+              <Input
+                blurToggleCount={blurInputToggleCount}
                 value={inputURL}
+                setValue={setInputURL}
                 onChange={handleInputChange}
+                placeholder="Enter URL"
               />
-              {inputURL && (
-                <button
-                  className="clear-btn transparent no-border"
-                  onClick={handleClear}
-                  type="button"
-                >
-                  <img width={13} height={13} src={CloseIcon} alt="Clear" />
-                </button>
-              )}
               <button
                 className="search-btn transparent no-border"
                 type="submit"
