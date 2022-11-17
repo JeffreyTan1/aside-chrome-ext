@@ -3,6 +3,7 @@ import SearchIcon from './../../assets/img/search-icon.svg';
 import HeartIcon from './../../assets/img/heart-icon.svg';
 import './Popup.scss';
 import Input from './Input';
+import Logo from './Logo';
 // import { getActiveTabURL } from '../../utils';
 // import { ACTIONS } from '../modules/actions';
 
@@ -118,7 +119,7 @@ const Popup: FC<{}> = (props) => {
     <div className="container">
       <div className="header">
         <div className="logo-container">
-          <h1>Browser Buddy</h1>
+          <Logo />
         </div>
         <div className="controls">
           <form onSubmit={handleSearchSubmit}>
@@ -130,7 +131,7 @@ const Popup: FC<{}> = (props) => {
                   className={`no-border bounce-active prefix-selector-text ${
                     prefix === URL_PREFIX.HTTP
                       ? 'red-orange-gradient-text'
-                      : 'blue-green-gradient-text'
+                      : 'purple-red-gradient-text'
                   }`}
                 >
                   {prefix}
