@@ -118,10 +118,24 @@
     justify-content: center;
     align-items: center;
 
-    .modal-content {
+    .modal-panel {
       width: 60%;
       height: 60%;
       border-radius: 10px;
+
+      .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.8rem 1rem;
+
+        h1 {
+          font-size: 1.5rem;
+          font-weight: normal;
+          margin: 0;
+          padding: 0;
+        }
+      }
     }
   }
 }

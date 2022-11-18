@@ -2,6 +2,7 @@ import React, { useEffect, useState, FC, ChangeEvent, FormEvent } from 'react';
 import { HiSearch, HiOutlineBookmark, HiOutlineBookOpen } from 'react-icons/hi';
 import Input from './Input';
 import Logo from './Logo';
+import BookmarksModal from './BookmarksModal';
 // import { getActiveTabURL } from '../../utils';
 // import { ACTIONS } from '../modules/actions';
 
@@ -185,17 +186,13 @@ const Popup: FC<{}> = (props) => {
             <iframe
               id={CONSTANTS.IFRAME_ID}
               key={iframeLoadCount}
-              title={`Browser Buddy - ${validURL}`}
+              title={`Smol - ${validURL}`}
               src={validURL}
               loading="lazy"
             />
           )
         )}
-        {showModal && (
-          <div className="modal">
-            <div className="modal-content glass"></div>
-          </div>
-        )}
+        {showModal && <BookmarksModal setShowModal={setShowModal} />}
       </div>
     </div>
   );
