@@ -137,6 +137,27 @@
           cursor: default;
         }
       }
+
+      .bookmark-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        .bookmark-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          font-size: medium;
+          padding: 1rem 1.5rem;
+          transition: 150ms;
+        }
+
+        .bookmark-item:hover {
+          background: rgba(59, 59, 59, 0.527);
+          cursor: pointer;
+          transition: 150ms;
+        }
+      }
     }
   }
 }

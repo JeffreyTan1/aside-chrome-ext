@@ -3,26 +3,15 @@ import { HiSearch, HiOutlineBookmark, HiOutlineBookOpen } from 'react-icons/hi';
 import Input from './Input';
 import Logo from './Logo';
 import BookmarksModal from './BookmarksModal';
+import {
+  isValidURL,
+  isURLBookmarked,
+  actionOnBookmarks,
+  CONSTANTS,
+  URL_PREFIX,
+} from './utils';
 // import { getActiveTabURL } from '../../utils';
 // import { ACTIONS } from '../modules/actions';
-
-enum URL_PREFIX {
-  HTTP = 'http://',
-  HTTPS = 'https://',
-}
-
-enum CONSTANTS {
-  LOCALSTORAGE_KEY = 'persistent-valid-url',
-  IFRAME_ID = 'browser-buddy-iframe',
-}
-
-const isValidUrl = (urlString: string) => {
-  try {
-    return Boolean(new URL(urlString));
-  } catch (e) {
-    return false;
-  }
-};
 
 const Popup: FC<{}> = (props) => {
   const [inputURL, setInputURL] = useState<string>('');
@@ -33,21 +22,41 @@ const Popup: FC<{}> = (props) => {
   const [showIframe, setShowIframe] = useState<boolean>(false);
   const [iframeLoadCount, setIframeLoadCount] = useState<number>(0);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [currentURLBookmarked, setCurrentURLBookmarked] =
+    useState<boolean>(false);
 
   const [blurInputToggleCount, setBlurInputToggleCount] = useState<number>(0);
+
+  const bookmarkURL = async () => {
+    actionOnBookmarks(validURL, 'add', () => {
+      setCurrentURLBookmarked(true);
+    });
+  };
+
+  const unbookmarkURL = async () => {
+    actionOnBookmarks(validURL, 'remove', () => {
+      setCurrentURLBookmarked(false);
+    });
+  };
+
+  const checkIfURLBookmarked = async () => {
+    console.log('checkIfURLBookmarked');
+    const isBookmarked = await isURLBookmarked(validURL);
+    setCurrentURLBookmarked(isBookmarked);
+  };
 
   const updateNewURL = (prefix: URL_PREFIX) => {
     setBlurInputToggleCount((prev) => prev + 1);
     const trimmedURL = inputURL.trim();
     const fullURL = `${prefix}${trimmedURL}`;
-    if (isValidUrl(fullURL)) {
+    if (isValidURL(fullURL)) {
       setValidURL(fullURL);
       setShowInvalidURLError(false);
       setIframeLoadCount((val) => val + 1);
       setInputURL(trimmedURL);
 
       chrome.storage.sync.set({
-        [CONSTANTS.LOCALSTORAGE_KEY]: fullURL,
+        [CONSTANTS.LAST_VALID_URL_KEY]: fullURL,
       });
     } else {
       setShowInvalidURLError(true);
@@ -78,6 +87,7 @@ const Popup: FC<{}> = (props) => {
   const handleSearchSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     updateNewURL(prefix);
+    checkIfURLBookmarked();
   };
 
   const handleOpenBookmarks = () => {
@@ -85,18 +95,18 @@ const Popup: FC<{}> = (props) => {
   };
 
   const handleToggleBookmark = () => {
-    setShowModal(true);
-  };
-
-  const handleModalClose = () => {
-    setShowModal(false);
+    if (currentURLBookmarked) {
+      unbookmarkURL();
+    } else {
+      bookmarkURL();
+    }
   };
 
   useEffect(() => {
     const getURL = async () => {
       const persistentValidURL = await new Promise<string>((resolve) => {
-        chrome.storage.sync.get([CONSTANTS.LOCALSTORAGE_KEY], (result) => {
-          resolve(result[CONSTANTS.LOCALSTORAGE_KEY]);
+        chrome.storage.sync.get([CONSTANTS.LAST_VALID_URL_KEY], (result) => {
+          resolve(result[CONSTANTS.LAST_VALID_URL_KEY]);
         });
       });
 
@@ -126,6 +136,16 @@ const Popup: FC<{}> = (props) => {
     getURL();
   }, []);
 
+  useEffect(() => {
+    if (validURL) {
+      checkIfURLBookmarked();
+    }
+  }, [validURL]);
+
+  useEffect(() => {
+    setCurrentURLBookmarked(false);
+  }, [inputURL]);
+
   return (
     <div className="container">
       <div className="header">
@@ -140,7 +160,10 @@ const Popup: FC<{}> = (props) => {
             className="glass bounce-active"
             onClick={handleToggleBookmark}
           >
-            <HiOutlineBookmark size={20} fill={'#ffaa00'} />
+            <HiOutlineBookmark
+              size={20}
+              fill={currentURLBookmarked ? '#ffaa00' : '#00000000'}
+            />
           </button>
 
           <form onSubmit={handleSearchSubmit}>
@@ -189,7 +212,12 @@ const Popup: FC<{}> = (props) => {
             />
           )
         )}
-        {showModal && <BookmarksModal setShowModal={setShowModal} />}
+        {showModal && (
+          <BookmarksModal
+            setShowModal={setShowModal}
+            refreshBookmarks={checkIfURLBookmarked}
+          />
+        )}
       </div>
     </div>
   );
