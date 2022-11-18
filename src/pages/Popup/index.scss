@@ -1,5 +1,5 @@
-@import './Globals.scss';
-@import './Common.scss';
+@import './globals.scss';
+@import './common.scss';
 
 .container {
   width: 46rem;
@@ -121,7 +121,6 @@
     .modal-content {
       width: 60%;
       height: 60%;
-      background: white;
       border-radius: 10px;
     }
   }

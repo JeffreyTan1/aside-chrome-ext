@@ -1,6 +1,5 @@
 import React, { useEffect, useState, FC, ChangeEvent, FormEvent } from 'react';
 import { HiSearch, HiOutlineBookmark, HiOutlineBookOpen } from 'react-icons/hi';
-import './Popup.scss';
 import Input from './Input';
 import Logo from './Logo';
 // import { getActiveTabURL } from '../../utils';
@@ -194,7 +193,7 @@ const Popup: FC<{}> = (props) => {
         )}
         {showModal && (
           <div className="modal">
-            <div className="modal-content"></div>
+            <div className="modal-content glass"></div>
           </div>
         )}
       </div>
