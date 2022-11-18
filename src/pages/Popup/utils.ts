@@ -17,6 +17,11 @@ export const isValidURL = (urlString: string) => {
   }
 };
 
+export const setLastValidURL = (url: string) => {
+  chrome.storage.sync.set({
+    [CONSTANTS.LAST_VALID_URL_KEY]: url,
+  });
+};
 export const isURLBookmarked = async (url: string) => {
   const data = await chrome.storage.sync.get(CONSTANTS.VALID_URL_BOOKMARKS_KEY);
   const bookmarks = data[CONSTANTS.VALID_URL_BOOKMARKS_KEY];

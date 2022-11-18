@@ -7,6 +7,7 @@ import {
   isValidURL,
   isURLBookmarked,
   actionOnBookmarks,
+  setLastValidURL,
   CONSTANTS,
   URL_PREFIX,
 } from './utils';
@@ -53,10 +54,7 @@ const Popup: FC<{}> = (props) => {
       setShowInvalidURLError(false);
       setIframeLoadCount((val) => val + 1);
       setInputURL(trimmedURL);
-
-      chrome.storage.sync.set({
-        [CONSTANTS.LAST_VALID_URL_KEY]: fullURL,
-      });
+      setLastValidURL(fullURL);
     } else {
       setShowInvalidURLError(true);
     }
@@ -109,6 +107,7 @@ const Popup: FC<{}> = (props) => {
     setPrefix(prefixUrlStartsWith);
     setInputURL(dePrefixedURL);
     setValidURL(url);
+    setLastValidURL(url);
     setShowModal(false);
     setIframeLoadCount((val) => val + 1);
     checkIfURLBookmarked();
