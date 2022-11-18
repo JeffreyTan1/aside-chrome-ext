@@ -90,3 +90,13 @@
   justify-content: center;
   cursor: pointer;
 }
+
+.grow-btn {
+  background: transparent;
+  border: none;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  flex-grow: 1;
+}

@@ -7,7 +7,6 @@ import {
   isValidURL,
   isURLBookmarked,
   actionOnBookmarks,
-  getAllBookmarks,
   CONSTANTS,
   URL_PREFIX,
 } from './utils';
@@ -216,6 +215,9 @@ const Popup: FC<{}> = (props) => {
           <BookmarksModal
             setShowModal={setShowModal}
             refreshBookmarks={checkIfURLBookmarked}
+            setInputURL={setInputURL}
+            setPrefix={setPrefix}
+            updateNewURL={updateNewURL}
           />
         )}
       </div>

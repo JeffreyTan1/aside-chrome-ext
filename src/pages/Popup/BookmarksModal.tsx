@@ -1,13 +1,22 @@
 import React, { FC, useEffect, useState, useRef } from 'react';
 import { HiX, HiCheck, HiTrash } from 'react-icons/hi';
-import { getAllBookmarks, actionOnBookmarks } from './utils';
+import { getAllBookmarks, actionOnBookmarks, URL_PREFIX } from './utils';
 interface Props {
   setShowModal: (showModal: boolean) => void;
   refreshBookmarks: () => void;
+  setInputURL: (inputURL: string) => void;
+  setPrefix: (prefix: URL_PREFIX) => void;
+  updateNewURL: (prefix: URL_PREFIX) => void;
 }
 
 const BookmarksModal: FC<Props> = (props) => {
-  const { setShowModal, refreshBookmarks } = props;
+  const {
+    setShowModal,
+    refreshBookmarks,
+    setInputURL,
+    setPrefix,
+    updateNewURL,
+  } = props;
 
   const darkMode =
     window.matchMedia &&
@@ -19,6 +28,20 @@ const BookmarksModal: FC<Props> = (props) => {
     await actionOnBookmarks(url, 'remove');
     setBookmarks(bookmarks.filter((bookmark) => bookmark !== url));
     refreshBookmarks();
+  };
+
+  const onBookmarkClick = (url: string) => {
+    const prefixUrlStartsWith = url.startsWith(URL_PREFIX.HTTP)
+      ? URL_PREFIX.HTTP
+      : URL_PREFIX.HTTPS;
+    const dePrefixedURL = url.replace(prefixUrlStartsWith, '');
+    console.log(prefixUrlStartsWith);
+    console.log(dePrefixedURL);
+
+    setInputURL(dePrefixedURL);
+    setPrefix(prefixUrlStartsWith);
+    updateNewURL(prefixUrlStartsWith);
+    setShowModal(false);
   };
 
   useEffect(() => {
@@ -65,7 +88,14 @@ const BookmarksModal: FC<Props> = (props) => {
           <ul className="bookmark-list">
             {bookmarks.map((bookmark) => (
               <li className="bookmark-item" key={bookmark}>
-                {bookmark}
+                <button
+                  className={`grow-btn bounce-active grow-btn ${
+                    darkMode ? 'dark' : ''
+                  }`}
+                  onClick={() => onBookmarkClick(bookmark)}
+                >
+                  {bookmark}
+                </button>
                 <SafeDeleteButton
                   url={bookmark}
                   darkMode={darkMode}
