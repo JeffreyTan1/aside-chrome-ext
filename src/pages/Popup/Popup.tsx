@@ -101,6 +101,19 @@ const Popup: FC<{}> = (props) => {
     }
   };
 
+  const handleBookmarkOpen = (url: string) => {
+    const prefixUrlStartsWith = url.startsWith(URL_PREFIX.HTTP)
+      ? URL_PREFIX.HTTP
+      : URL_PREFIX.HTTPS;
+    const dePrefixedURL = url.replace(prefixUrlStartsWith, '');
+    setPrefix(prefixUrlStartsWith);
+    setInputURL(dePrefixedURL);
+    setValidURL(url);
+    setShowModal(false);
+    setIframeLoadCount((val) => val + 1);
+    checkIfURLBookmarked();
+  };
+
   useEffect(() => {
     const getURL = async () => {
       const persistentValidURL = await new Promise<string>((resolve) => {
@@ -215,9 +228,7 @@ const Popup: FC<{}> = (props) => {
           <BookmarksModal
             setShowModal={setShowModal}
             refreshBookmarks={checkIfURLBookmarked}
-            setInputURL={setInputURL}
-            setPrefix={setPrefix}
-            updateNewURL={updateNewURL}
+            handleBookmarkOpen={handleBookmarkOpen}
           />
         )}
       </div>
