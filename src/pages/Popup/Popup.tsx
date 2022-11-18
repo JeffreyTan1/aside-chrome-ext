@@ -41,9 +41,6 @@ const Popup: FC<{}> = (props) => {
   };
 
   const checkIfURLBookmarked = async () => {
-    console.log('checking if url is bookmarked');
-    console.log('bookmark url', validURL);
-    console.log('all bookmarks', await getAllBookmarks());
     const isBookmarked = await isURLBookmarked(validURL);
     setCurrentURLBookmarked(isBookmarked);
   };

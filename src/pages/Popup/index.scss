@@ -131,7 +131,7 @@
 
         h1 {
           font-size: 1.5rem;
-          font-weight: normal;
+          font-weight: bold;
           margin: 0;
           padding: 0;
           cursor: default;
@@ -150,6 +150,12 @@
           font-size: medium;
           padding: 1rem 1.5rem;
           transition: 150ms;
+
+          .confirmation-btn-group {
+            display: flex;
+            align-items: center;
+            column-gap: 0.5rem;
+          }
         }
 
         .bookmark-item:hover {
@@ -157,6 +163,15 @@
           cursor: pointer;
           transition: 150ms;
         }
+      }
+
+      .no-bookmarks {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 70%;
+        font-size: medium;
+        cursor:default;
       }
     }
   }

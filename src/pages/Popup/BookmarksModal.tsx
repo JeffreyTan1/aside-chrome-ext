@@ -1,5 +1,5 @@
-import React, { FC, useEffect, useRef } from 'react';
-import { HiX, HiTrash } from 'react-icons/hi';
+import React, { FC, useEffect, useState, useRef } from 'react';
+import { HiX, HiCheck, HiTrash } from 'react-icons/hi';
 import { getAllBookmarks, actionOnBookmarks } from './utils';
 interface Props {
   setShowModal: (showModal: boolean) => void;
@@ -16,9 +16,7 @@ const BookmarksModal: FC<Props> = (props) => {
   const [bookmarks, setBookmarks] = React.useState<string[]>([]);
 
   const onBookmarkDelete = async (url: string) => {
-    console.log('removing bookmark', url);
     await actionOnBookmarks(url, 'remove');
-    console.log('all bookmarks', await getAllBookmarks());
     setBookmarks(bookmarks.filter((bookmark) => bookmark !== url));
     refreshBookmarks();
   };
@@ -63,22 +61,64 @@ const BookmarksModal: FC<Props> = (props) => {
           </button>
         </div>
 
-        <ul className="bookmark-list">
-          {bookmarks.map((bookmark) => (
-            <li className="bookmark-item" key={bookmark}>
-              {bookmark}
-              <button
-                className={`btn bounce-active ${darkMode ? 'dark' : ''}`}
-                onClick={() => onBookmarkDelete(bookmark)}
-              >
-                <HiTrash size={20} />
-              </button>
-            </li>
-          ))}
-        </ul>
+        {bookmarks.length > 0 ? (
+          <ul className="bookmark-list">
+            {bookmarks.map((bookmark) => (
+              <li className="bookmark-item" key={bookmark}>
+                {bookmark}
+                <SafeDeleteButton
+                  url={bookmark}
+                  darkMode={darkMode}
+                  onBookmarkDelete={onBookmarkDelete}
+                />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="no-bookmarks">
+            <p>No bookmarks yet</p>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
 export default BookmarksModal;
+
+interface SafeDeleteButtonProps {
+  url: string;
+  darkMode: boolean;
+  onBookmarkDelete: (url: string) => void;
+}
+
+const SafeDeleteButton: FC<SafeDeleteButtonProps> = (props) => {
+  const { url, darkMode, onBookmarkDelete } = props;
+  const [isConfirming, setIsConfirming] = useState<boolean>(false);
+
+  const buttonStyle = `btn bounce-active ${darkMode ? 'dark' : ''}`;
+  return (
+    <>
+      {isConfirming ? (
+        <div className="confirmation-btn-group">
+          <small>Delete?</small>
+          <button className={buttonStyle} onClick={() => onBookmarkDelete(url)}>
+            <HiCheck size={20} />
+            <small>Confirm</small>
+          </button>
+          <button
+            className={buttonStyle}
+            onClick={() => setIsConfirming(false)}
+          >
+            <HiX size={20} />
+            <small>Cancel</small>
+          </button>
+        </div>
+      ) : (
+        <button className={buttonStyle} onClick={() => setIsConfirming(true)}>
+          <HiTrash size={20} />
+        </button>
+      )}
+    </>
+  );
+};
