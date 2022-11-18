@@ -1,1 +1,1 @@
-chrome.devtools.panels.create('Browser Buddy', 'icon.png', 'panel.html');
+chrome.devtools.panels.create('Smol', 'icon.png', 'panel.html');
