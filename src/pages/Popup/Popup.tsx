@@ -7,6 +7,7 @@ import {
   isValidURL,
   isURLBookmarked,
   actionOnBookmarks,
+  getAllBookmarks,
   CONSTANTS,
   URL_PREFIX,
 } from './utils';
@@ -40,7 +41,9 @@ const Popup: FC<{}> = (props) => {
   };
 
   const checkIfURLBookmarked = async () => {
-    console.log('checkIfURLBookmarked');
+    console.log('checking if url is bookmarked');
+    console.log('bookmark url', validURL);
+    console.log('all bookmarks', await getAllBookmarks());
     const isBookmarked = await isURLBookmarked(validURL);
     setCurrentURLBookmarked(isBookmarked);
   };

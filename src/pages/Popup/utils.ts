@@ -32,35 +32,32 @@ export const actionOnBookmarks = async (
     return;
   }
   // get the current bookmarks
-  chrome.storage.sync.get(CONSTANTS.VALID_URL_BOOKMARKS_KEY, (data) => {
-    // check if the current url is already bookmarked
-    const bookmarks = data[CONSTANTS.VALID_URL_BOOKMARKS_KEY] || [];
 
-    if (action === 'add') {
-      const isAlreadyBookmarked = bookmarks.some(
-        (bookmark: string) => bookmark === validURL
-      );
-      if (isAlreadyBookmarked) return;
+  const data = await chrome.storage.sync.get(CONSTANTS.VALID_URL_BOOKMARKS_KEY);
+  // check if the current url is already bookmarked
+  const bookmarks = data[CONSTANTS.VALID_URL_BOOKMARKS_KEY] || [];
 
-      // add the current url to the bookmarks
-      bookmarks.push(validURL);
-    } else {
-      // remove the current url from the bookmarks
-      const index = bookmarks.indexOf(validURL);
-      if (index > -1) {
-        bookmarks.splice(index, 1);
-      }
-    }
-    // save the bookmarks
-    chrome.storage.sync.set(
-      {
-        [CONSTANTS.VALID_URL_BOOKMARKS_KEY]: bookmarks,
-      },
-      () => {
-        callback();
-      }
+  if (action === 'add') {
+    const isAlreadyBookmarked = bookmarks.some(
+      (bookmark: string) => bookmark === validURL
     );
+    if (isAlreadyBookmarked) return;
+
+    // add the current url to the bookmarks
+    bookmarks.push(validURL);
+  } else {
+    // remove the current url from the bookmarks
+    const index = bookmarks.indexOf(validURL);
+    if (index > -1) {
+      bookmarks.splice(index, 1);
+    }
+  }
+  // save the bookmarks
+  await chrome.storage.sync.set({
+    [CONSTANTS.VALID_URL_BOOKMARKS_KEY]: bookmarks,
   });
+
+  callback();
 };
 
 export const getAllBookmarks = async () => {

@@ -15,8 +15,10 @@ const BookmarksModal: FC<Props> = (props) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [bookmarks, setBookmarks] = React.useState<string[]>([]);
 
-  const onBookmarkDelete = (url: string) => {
-    actionOnBookmarks(url, 'remove');
+  const onBookmarkDelete = async (url: string) => {
+    console.log('removing bookmark', url);
+    await actionOnBookmarks(url, 'remove');
+    console.log('all bookmarks', await getAllBookmarks());
     setBookmarks(bookmarks.filter((bookmark) => bookmark !== url));
     refreshBookmarks();
   };
