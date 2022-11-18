@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, FC, ChangeEvent } from 'react';
-import CloseIcon from './../../assets/img/close-icon.svg';
+import { IoIosCloseCircle } from 'react-icons/io';
 
 interface Props {
   value: string;
@@ -67,7 +67,7 @@ const Input: FC<Props> = (props) => {
           onClick={handleClear}
           type="button"
         >
-          <img width={13} height={13} src={CloseIcon} alt="Clear" />
+          <IoIosCloseCircle fillOpacity={0.6} size={15} />
         </button>
       )}
     </div>

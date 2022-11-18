@@ -1,7 +1,5 @@
 import React, { useEffect, useState, FC, ChangeEvent, FormEvent } from 'react';
-import SearchIcon from './../../assets/img/search-icon.svg';
-import HeartIcon from './../../assets/img/heart-icon.svg';
-import BookmarkIcon from './../../assets/img/bookmark-icon.svg';
+import { HiSearch, HiOutlineBookmark, HiOutlineBookOpen } from 'react-icons/hi';
 import './Popup.scss';
 import Input from './Input';
 import Logo from './Logo';
@@ -34,6 +32,8 @@ const Popup: FC<{}> = (props) => {
     useState<boolean>(false);
   const [showIframe, setShowIframe] = useState<boolean>(false);
   const [iframeLoadCount, setIframeLoadCount] = useState<number>(0);
+  const [showModal, setShowModal] = useState<boolean>(false);
+
   const [blurInputToggleCount, setBlurInputToggleCount] = useState<number>(0);
 
   const updateNewURL = (prefix: URL_PREFIX) => {
@@ -80,6 +80,18 @@ const Popup: FC<{}> = (props) => {
     updateNewURL(prefix);
   };
 
+  const handleOpenBookmarks = () => {
+    setShowModal(true);
+  };
+
+  const handleToggleBookmark = () => {
+    setShowModal(true);
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+  };
+
   useEffect(() => {
     const getURL = async () => {
       const persistentValidURL = await new Promise<string>((resolve) => {
@@ -121,11 +133,14 @@ const Popup: FC<{}> = (props) => {
           <Logo />
         </div>
         <div className="controls">
-          <button className="glass bounce-active">
-            <img width={18} height={18} src={HeartIcon} alt="heart" />
+          <button className="glass bounce-active" onClick={handleOpenBookmarks}>
+            <HiOutlineBookOpen size={20} />
           </button>
-          <button className="glass bounce-active">
-            <img width={18} height={18} src={BookmarkIcon} alt="bookmark" />
+          <button
+            className="glass bounce-active"
+            onClick={handleToggleBookmark}
+          >
+            <HiOutlineBookmark size={20} fill={'#ffaa00'} />
           </button>
 
           <form onSubmit={handleSearchSubmit}>
@@ -154,7 +169,7 @@ const Popup: FC<{}> = (props) => {
                 className="search-btn transparent no-border"
                 type="submit"
               >
-                <img width={20} height={20} src={SearchIcon} alt="search" />
+                <HiSearch size={20} />
               </button>
             </div>
           </form>
@@ -176,6 +191,11 @@ const Popup: FC<{}> = (props) => {
               loading="lazy"
             />
           )
+        )}
+        {showModal && (
+          <div className="modal">
+            <div className="modal-content"></div>
+          </div>
         )}
       </div>
     </div>
