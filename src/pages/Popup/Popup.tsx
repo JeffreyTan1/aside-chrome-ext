@@ -165,10 +165,7 @@ const Popup: FC<{}> = (props) => {
                 onChange={handleInputChange}
                 placeholder="Enter URL"
               />
-              <button
-                className="search-btn transparent no-border"
-                type="submit"
-              >
+              <button className="search-btn btn" type="submit">
                 <HiSearch size={20} />
               </button>
             </div>

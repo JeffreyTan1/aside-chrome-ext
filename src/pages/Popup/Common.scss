@@ -68,6 +68,10 @@
   transition: 300ms;
 }
 
+.dark {
+  color: #fff;
+}
+
 .bounce-active {
   transition: 300ms;
 }
@@ -75,4 +79,14 @@
 .bounce-active:active {
   transform: scale(0.95);
   transition: 100ms;
+}
+
+.btn {
+  background: transparent;
+  border: none;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }

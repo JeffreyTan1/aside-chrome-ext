@@ -62,11 +62,7 @@ const Input: FC<Props> = (props) => {
         ref={inputRef}
       />
       {value && showClear && (
-        <button
-          className="clear-btn transparent no-border"
-          onClick={handleClear}
-          type="button"
-        >
+        <button className="clear-btn btn" onClick={handleClear} type="button">
           <IoIosCloseCircle fillOpacity={0.6} size={15} />
         </button>
       )}
