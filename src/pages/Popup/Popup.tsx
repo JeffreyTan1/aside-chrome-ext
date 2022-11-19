@@ -18,44 +18,46 @@ import {
 // import { ACTIONS } from '../modules/actions';
 
 const Popup: FC<{}> = (props) => {
+  // Input states
   const [inputURL, setInputURL] = useState<string>('');
-  const [validURL, setValidURL] = useState<string>('');
   const [prefix, setPrefix] = useState<URL_PREFIX>(URL_PREFIX.HTTPS);
-  const [showInvalidURLError, setShowInvalidURLError] =
-    useState<boolean>(false);
+  const [blurInputToggleCount, setBlurInputToggleCount] = useState<number>(0);
+
+  // Iframe states
+  const [validURL, setValidURL] = useState<string>('');
   const [showIframe, setShowIframe] = useState<boolean>(false);
   const [iframeLoadCount, setIframeLoadCount] = useState<number>(0);
+
+  // Show states
+  const [showInvalidURLError, setShowInvalidURLError] =
+    useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [currentURLBookmarked, setCurrentURLBookmarked] =
     useState<boolean>(false);
 
-  const [blurInputToggleCount, setBlurInputToggleCount] = useState<number>(0);
-
-  const checkIfURLBookmarked = async () => {
-    const isBookmarked = await isURLBookmarked(validURL);
+  const checkIfURLBookmarked = async (url?: string) => {
+    const isBookmarked = await isURLBookmarked(url ? url : validURL);
     setCurrentURLBookmarked(isBookmarked);
   };
 
-  const updateNewURL = (prefix: URL_PREFIX) => {
-    setBlurInputToggleCount((prev) => prev + 1);
-    const trimmedURL = inputURL.trim();
-    const fullURL = `${prefix}${trimmedURL}`;
-    if (isValidURL(fullURL)) {
-      setValidURL(fullURL);
+  const updateURLStates = (url: string) => {
+    if (isValidURL(url)) {
+      const { prefix, dePrefixedURL } = getURLPrefixAndDeprefixed(url);
+      setPrefix(prefix);
+      setInputURL(dePrefixedURL);
+      setValidURL(url);
       setShowInvalidURLError(false);
-      setIframeLoadCount((val) => val + 1);
-      setInputURL(trimmedURL);
-      setLastValidURL(fullURL);
     } else {
       setShowInvalidURLError(true);
     }
+    checkIfURLBookmarked(url);
   };
 
-  const handlePrefixChange = () => {
+  const handleURLPrefixChange = (prefix: URL_PREFIX) => {
     const newPrefix =
       prefix === URL_PREFIX.HTTP ? URL_PREFIX.HTTPS : URL_PREFIX.HTTP;
     setPrefix(newPrefix);
-    updateNewURL(newPrefix);
+    updateURLStates(`${newPrefix}${inputURL}`);
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -74,20 +76,14 @@ const Popup: FC<{}> = (props) => {
 
   const handleSearchSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    updateNewURL(prefix);
-    checkIfURLBookmarked();
+    updateURLStates(`${prefix}${inputURL}`);
   };
 
   const handleBookmarkFromUnderlyingPage = async () => {
     const activeTab = await getActiveTab();
     const url = activeTab.url;
     if (url && isValidURL(url)) {
-      const { prefix, dePrefixedURL } = getURLPrefixAndDeprefixed(url);
-      setPrefix(prefix);
-      setInputURL(dePrefixedURL);
-      setValidURL(url);
-      setLastValidURL(url);
-      setIframeLoadCount((val) => val + 1);
+      updateURLStates(url);
     }
   };
 
@@ -97,20 +93,12 @@ const Popup: FC<{}> = (props) => {
     } else {
       await actionOnBookmarks(validURL, 'add');
     }
+    checkIfURLBookmarked(validURL);
   };
 
   const handleBookmarkOpen = (url: string) => {
-    const prefixUrlStartsWith = url.startsWith(URL_PREFIX.HTTP)
-      ? URL_PREFIX.HTTP
-      : URL_PREFIX.HTTPS;
-    const dePrefixedURL = url.replace(prefixUrlStartsWith, '');
-    setPrefix(prefixUrlStartsWith);
-    setInputURL(dePrefixedURL);
-    setValidURL(url);
-    setLastValidURL(url);
+    updateURLStates(url);
     setShowModal(false);
-    setIframeLoadCount((val) => val + 1);
-    checkIfURLBookmarked();
   };
 
   // Get last valid URL from storage on load
@@ -118,11 +106,7 @@ const Popup: FC<{}> = (props) => {
     const getURL = async () => {
       const persistentValidURL = await getLastValidURL();
       if (!persistentValidURL) return;
-      const { prefix, dePrefixedURL } =
-        getURLPrefixAndDeprefixed(persistentValidURL);
-      setValidURL(persistentValidURL);
-      setPrefix(prefix);
-      setInputURL(dePrefixedURL);
+      updateURLStates(persistentValidURL);
       setShowIframe(true);
     };
 
@@ -132,13 +116,14 @@ const Popup: FC<{}> = (props) => {
   // Check if valid URL is bookmarked
   useEffect(() => {
     if (validURL) {
-      checkIfURLBookmarked();
+      setLastValidURL(validURL);
     }
   }, [validURL]);
 
   // If input changes set url bookmarked to false
   useEffect(() => {
     setCurrentURLBookmarked(false);
+    setIframeLoadCount((val) => val + 1);
   }, [inputURL]);
 
   return (
@@ -178,7 +163,7 @@ const Popup: FC<{}> = (props) => {
               <div className="prefix-selector-container">
                 <button
                   type="button"
-                  onClick={handlePrefixChange}
+                  onClick={() => handleURLPrefixChange(prefix)}
                   className={`no-border bounce-active prefix-selector-text ${
                     prefix === URL_PREFIX.HTTP
                       ? 'red-orange-gradient-text'
