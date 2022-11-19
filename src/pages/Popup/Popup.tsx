@@ -4,6 +4,8 @@ import { TbBrowserPlus } from 'react-icons/tb';
 import Input from './Input';
 import Logo from './Logo';
 import BookmarksModal from './BookmarksModal';
+import ReactTooltip from 'react-tooltip';
+
 import {
   CONSTANTS,
   URL_PREFIX,
@@ -136,6 +138,7 @@ const Popup: FC<{}> = (props) => {
         <div className="controls">
           <button
             className="glass bounce-active"
+            data-tip="Load URL from current page"
             onClick={handleBookmarkFromUnderlyingPage}
           >
             <TbBrowserPlus size={20} />
@@ -143,6 +146,7 @@ const Popup: FC<{}> = (props) => {
 
           <button
             className="glass bounce-active"
+            data-tip="Open bookmarks"
             onClick={() => {
               setShowModal(true);
             }}
@@ -151,6 +155,7 @@ const Popup: FC<{}> = (props) => {
           </button>
           <button
             className="glass bounce-active"
+            data-tip="Toogle bookmark"
             onClick={handleToggleBookmark}
           >
             <HiOutlineBookmark
@@ -164,12 +169,13 @@ const Popup: FC<{}> = (props) => {
               <div className="prefix-selector-container">
                 <button
                   type="button"
-                  onClick={() => handleURLPrefixChange(prefix)}
                   className={`no-border bounce-active prefix-selector-text ${
                     prefix === URL_PREFIX.HTTP
                       ? 'red-orange-gradient-text'
                       : 'purple-red-gradient-text'
                   }`}
+                  data-tip="Toggle URL prefix"
+                  onClick={() => handleURLPrefixChange(prefix)}
                 >
                   {prefix}
                 </button>
@@ -213,6 +219,13 @@ const Popup: FC<{}> = (props) => {
           />
         )}
       </div>
+      <ReactTooltip
+        delayShow={400}
+        padding={'5px 5px'}
+        place="bottom"
+        border
+        borderColor="#5c5c5c"
+      />
     </div>
   );
 };
