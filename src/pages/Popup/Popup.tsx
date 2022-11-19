@@ -1,17 +1,20 @@
 import React, { useEffect, useState, FC, ChangeEvent, FormEvent } from 'react';
 import { HiSearch, HiOutlineBookmark, HiOutlineBookOpen } from 'react-icons/hi';
+import { TbBrowserPlus } from 'react-icons/tb';
 import Input from './Input';
 import Logo from './Logo';
 import BookmarksModal from './BookmarksModal';
 import {
-  isValidURL,
-  isURLBookmarked,
-  actionOnBookmarks,
-  setLastValidURL,
   CONSTANTS,
   URL_PREFIX,
+  isValidURL,
+  getURLPrefixAndDeprefixed,
+  setLastValidURL,
+  getLastValidURL,
+  isURLBookmarked,
+  actionOnBookmarks,
+  getActiveTab,
 } from './utils';
-// import { getActiveTabURL } from '../../utils';
 // import { ACTIONS } from '../modules/actions';
 
 const Popup: FC<{}> = (props) => {
@@ -27,18 +30,6 @@ const Popup: FC<{}> = (props) => {
     useState<boolean>(false);
 
   const [blurInputToggleCount, setBlurInputToggleCount] = useState<number>(0);
-
-  const bookmarkURL = async () => {
-    actionOnBookmarks(validURL, 'add', () => {
-      setCurrentURLBookmarked(true);
-    });
-  };
-
-  const unbookmarkURL = async () => {
-    actionOnBookmarks(validURL, 'remove', () => {
-      setCurrentURLBookmarked(false);
-    });
-  };
 
   const checkIfURLBookmarked = async () => {
     const isBookmarked = await isURLBookmarked(validURL);
@@ -87,15 +78,24 @@ const Popup: FC<{}> = (props) => {
     checkIfURLBookmarked();
   };
 
-  const handleOpenBookmarks = () => {
-    setShowModal(true);
+  const handleBookmarkFromUnderlyingPage = async () => {
+    const activeTab = await getActiveTab();
+    const url = activeTab.url;
+    if (url && isValidURL(url)) {
+      const { prefix, dePrefixedURL } = getURLPrefixAndDeprefixed(url);
+      setPrefix(prefix);
+      setInputURL(dePrefixedURL);
+      setValidURL(url);
+      setLastValidURL(url);
+      setIframeLoadCount((val) => val + 1);
+    }
   };
 
-  const handleToggleBookmark = () => {
+  const handleToggleBookmark = async () => {
     if (currentURLBookmarked) {
-      unbookmarkURL();
+      await actionOnBookmarks(validURL, 'remove');
     } else {
-      bookmarkURL();
+      await actionOnBookmarks(validURL, 'add');
     }
   };
 
@@ -113,46 +113,30 @@ const Popup: FC<{}> = (props) => {
     checkIfURLBookmarked();
   };
 
+  // Get last valid URL from storage on load
   useEffect(() => {
     const getURL = async () => {
-      const persistentValidURL = await new Promise<string>((resolve) => {
-        chrome.storage.sync.get([CONSTANTS.LAST_VALID_URL_KEY], (result) => {
-          resolve(result[CONSTANTS.LAST_VALID_URL_KEY]);
-        });
-      });
-
+      const persistentValidURL = await getLastValidURL();
       if (!persistentValidURL) return;
-
-      // parse prefix booleans
-      const HTTPPrefix = persistentValidURL.startsWith(URL_PREFIX.HTTP);
-      const HTTPSPrefix = persistentValidURL.startsWith(URL_PREFIX.HTTPS);
-      setPrefix(HTTPPrefix ? URL_PREFIX.HTTP : URL_PREFIX.HTTPS);
-
-      if (!HTTPPrefix && !HTTPSPrefix) return;
-
-      const URLWithoutPrefix = persistentValidURL.replace(
-        HTTPPrefix ? URL_PREFIX.HTTP : URL_PREFIX.HTTPS,
-        ''
-      );
-      setPrefix(HTTPPrefix ? URL_PREFIX.HTTP : URL_PREFIX.HTTPS);
+      const { prefix, dePrefixedURL } =
+        getURLPrefixAndDeprefixed(persistentValidURL);
       setValidURL(persistentValidURL);
-      setInputURL(URLWithoutPrefix);
-    };
-
-    // Delay iframe rendering to prevent performance issues
-    setTimeout(() => {
+      setPrefix(prefix);
+      setInputURL(dePrefixedURL);
       setShowIframe(true);
-    }, 100);
+    };
 
     getURL();
   }, []);
 
+  // Check if valid URL is bookmarked
   useEffect(() => {
     if (validURL) {
       checkIfURLBookmarked();
     }
   }, [validURL]);
 
+  // If input changes set url bookmarked to false
   useEffect(() => {
     setCurrentURLBookmarked(false);
   }, [inputURL]);
@@ -164,7 +148,19 @@ const Popup: FC<{}> = (props) => {
           <Logo />
         </div>
         <div className="controls">
-          <button className="glass bounce-active" onClick={handleOpenBookmarks}>
+          <button
+            className="glass bounce-active"
+            onClick={handleBookmarkFromUnderlyingPage}
+          >
+            <TbBrowserPlus size={20} />
+          </button>
+
+          <button
+            className="glass bounce-active"
+            onClick={() => {
+              setShowModal(true);
+            }}
+          >
             <HiOutlineBookOpen size={20} />
           </button>
           <button

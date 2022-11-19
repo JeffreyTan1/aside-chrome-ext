@@ -1,3 +1,4 @@
+// ENUMS and constants
 export enum URL_PREFIX {
   HTTP = 'http://',
   HTTPS = 'https://',
@@ -9,6 +10,7 @@ export enum CONSTANTS {
   IFRAME_ID = 'browser-buddy-iframe',
 }
 
+// Helper functions
 export const isValidURL = (urlString: string) => {
   try {
     return Boolean(new URL(urlString));
@@ -17,11 +19,24 @@ export const isValidURL = (urlString: string) => {
   }
 };
 
-export const setLastValidURL = (url: string) => {
-  chrome.storage.sync.set({
-    [CONSTANTS.LAST_VALID_URL_KEY]: url,
-  });
+export const getURLPrefixAndDeprefixed = (url: string) => {
+  const prefix = url.startsWith(URL_PREFIX.HTTP)
+    ? URL_PREFIX.HTTP
+    : URL_PREFIX.HTTPS;
+  const dePrefixedURL = url.replace(prefix, '');
+  return { prefix, dePrefixedURL };
 };
+
+// Chrome storage functions
+export const setLastValidURL = async (url: string) => {
+  await chrome.storage.sync.set({ [CONSTANTS.LAST_VALID_URL_KEY]: url });
+};
+
+export const getLastValidURL = async () => {
+  const url = await chrome.storage.sync.get(CONSTANTS.LAST_VALID_URL_KEY);
+  return url[CONSTANTS.LAST_VALID_URL_KEY];
+};
+
 export const isURLBookmarked = async (url: string) => {
   const data = await chrome.storage.sync.get(CONSTANTS.VALID_URL_BOOKMARKS_KEY);
   const bookmarks = data[CONSTANTS.VALID_URL_BOOKMARKS_KEY];
@@ -30,8 +45,7 @@ export const isURLBookmarked = async (url: string) => {
 
 export const actionOnBookmarks = async (
   validURL: string,
-  action: 'add' | 'remove',
-  callback: Function = () => {}
+  action: 'add' | 'remove'
 ) => {
   if (!validURL) {
     return;
@@ -61,11 +75,15 @@ export const actionOnBookmarks = async (
   await chrome.storage.sync.set({
     [CONSTANTS.VALID_URL_BOOKMARKS_KEY]: bookmarks,
   });
-
-  callback();
 };
 
 export const getAllBookmarks = async () => {
   const data = await chrome.storage.sync.get(CONSTANTS.VALID_URL_BOOKMARKS_KEY);
   return data[CONSTANTS.VALID_URL_BOOKMARKS_KEY];
+};
+
+// Chrome tabs functions
+export const getActiveTab = async () => {
+  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+  return tabs[0];
 };
