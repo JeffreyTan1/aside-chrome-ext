@@ -6,7 +6,6 @@ import LogoImage from './../../assets/img/logo.png';
 import LogoText from './../../assets/img/logo-text.svg';
 import BookmarksModal from './BookmarksModal';
 import ReactTooltip from 'react-tooltip';
-
 import {
   CONSTANTS,
   URL_PREFIX,
@@ -82,6 +81,7 @@ const Popup: FC<{}> = (props) => {
   const handleSearchSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     updateURLStates(`${prefix}${inputURL}`);
+    setBlurInputToggleCount(blurInputToggleCount + 1);
   };
 
   const handleBookmarkFromUnderlyingPage = async () => {
@@ -112,7 +112,9 @@ const Popup: FC<{}> = (props) => {
       const persistentValidURL = await getLastValidURL();
       if (!persistentValidURL) return;
       updateURLStates(persistentValidURL);
-      setShowIframe(true);
+      setTimeout(() => {
+        setShowIframe(true);
+      }, 300);
     };
 
     getURL();
@@ -234,12 +236,3 @@ const Popup: FC<{}> = (props) => {
 };
 
 export default Popup;
-
-// import StarIcon from './../../assets/img/star-icon.svg';
-// import SettingsIcon from './../../assets/img/settings-icon.svg';
-// <button className="glass">
-//   <img src={SettingsIcon} alt="settings" />
-// </button>
-// <button className="glass">
-//   <img src={StarIcon} alt="save" />
-// </button>
