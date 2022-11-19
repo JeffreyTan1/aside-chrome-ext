@@ -2,7 +2,8 @@ import React, { useEffect, useState, FC, ChangeEvent, FormEvent } from 'react';
 import { HiSearch, HiOutlineBookmark, HiOutlineBookOpen } from 'react-icons/hi';
 import { TbBrowserPlus } from 'react-icons/tb';
 import Input from './Input';
-import LogoImage from './LogoImage';
+import LogoImage from './../../assets/img/logo.png';
+import LogoText from './../../assets/img/logo-text.svg';
 import BookmarksModal from './BookmarksModal';
 import ReactTooltip from 'react-tooltip';
 
@@ -17,7 +18,7 @@ import {
   actionOnBookmarks,
   getActiveTab,
 } from './utils';
-import LogoText from './LogoText';
+
 // import { ACTIONS } from '../modules/actions';
 
 const Popup: FC<{}> = (props) => {
@@ -134,8 +135,8 @@ const Popup: FC<{}> = (props) => {
     <div className="container">
       <div className="header">
         <div className="logo-container">
-          <LogoImage />
-          <LogoText />
+          <img src={LogoImage} alt="logo" className="logo-image" />
+          <img src={LogoText} alt="logo text" className="logo-text" />
         </div>
         <div className="controls">
           <button
