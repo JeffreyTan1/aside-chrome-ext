@@ -1,1 +1,1 @@
-chrome.devtools.panels.create('Smol', 'icon.png', 'panel.html');
+chrome.devtools.panels.create('Aside', 'icon.png', 'panel.html');

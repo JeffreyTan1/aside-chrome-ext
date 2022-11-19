@@ -205,7 +205,7 @@ const Popup: FC<{}> = (props) => {
             <iframe
               id={CONSTANTS.IFRAME_ID}
               key={iframeLoadCount}
-              title={`Smol - ${validURL}`}
+              title={`Aside - ${validURL}`}
               src={validURL}
               loading="lazy"
             />

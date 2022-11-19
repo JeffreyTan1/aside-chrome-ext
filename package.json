@@ -1,8 +1,7 @@
 {
-  "name": "mini-browser-extension",
-  "version": "4.3.5",
-  "description": "A chrome extension boilerplate built with React 17, Webpack 5, and Webpack Dev Server 4",
-  "license": "MIT",
+  "name": "aside-browser-extension",
+  "version": "1.0.0",
+  "description": "An extra window to your browser.",
   "repository": {
     "type": "git",
     "url": "https://github.com/JeffreyTan1/mini-window-extension.git"
