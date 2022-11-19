@@ -67,7 +67,7 @@ const BookmarksModal: FC<Props> = (props) => {
             {bookmarks.map((bookmark) => (
               <li className="bookmark-item" key={bookmark}>
                 <button
-                  className={`grow-btn bounce-active grow-btn ${
+                  className={`grow-btn bounce-active bookmark-btn ${
                     darkMode ? 'dark' : ''
                   }`}
                   onClick={() => handleBookmarkOpen(bookmark)}
