@@ -62,9 +62,10 @@ const Popup: FC<{}> = (props) => {
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newURL = e.target.value;
+
+    // Check if input has http or https prefix and remove it
     const startsWithHTTP = newURL.startsWith(URL_PREFIX.HTTP);
     const startsWithHTTPS = newURL.startsWith(URL_PREFIX.HTTPS);
-
     if (startsWithHTTP || startsWithHTTPS) {
       const newPrefix = startsWithHTTP ? URL_PREFIX.HTTP : URL_PREFIX.HTTPS;
       setPrefix(newPrefix);
@@ -117,13 +118,13 @@ const Popup: FC<{}> = (props) => {
   useEffect(() => {
     if (validURL) {
       setLastValidURL(validURL);
+      setIframeLoadCount((val) => val + 1);
     }
   }, [validURL]);
 
   // If input changes set url bookmarked to false
   useEffect(() => {
-    setCurrentURLBookmarked(false);
-    setIframeLoadCount((val) => val + 1);
+    checkIfURLBookmarked(`${prefix}${inputURL}`);
   }, [inputURL]);
 
   return (
