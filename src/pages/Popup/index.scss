@@ -65,7 +65,7 @@
         margin-right: 0.3rem;
       }
       input {
-        min-width: 13rem;
+        min-width: 16rem;
         font-size: 1rem;
         color:rgba(0, 0, 0, 0.822);
         padding: 0.2rem 0.5rem;
@@ -150,11 +150,14 @@
           font-size: medium;
           padding: 1rem 1.5rem;
           transition: 150ms;
-
-          .confirmation-btn-group {
-            display: flex;
-            align-items: center;
-            column-gap: 0.5rem;
+          .bookmark-actions {
+            padding-left: 1rem;
+            .confirmation-btn-group {
+              display: flex;
+              align-items: center;
+              column-gap: 0.5rem;
+              padding-left: 1rem;
+            }
           }
         }
 

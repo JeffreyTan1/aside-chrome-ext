@@ -106,7 +106,7 @@ const SafeDeleteButton: FC<SafeDeleteButtonProps> = (props) => {
 
   const buttonStyle = `btn bounce-active ${darkMode ? 'dark' : ''}`;
   return (
-    <>
+    <div className="bookmark-actions">
       {isConfirming ? (
         <div className="confirmation-btn-group">
           <small>Delete?</small>
@@ -127,6 +127,6 @@ const SafeDeleteButton: FC<SafeDeleteButtonProps> = (props) => {
           <HiTrash size={20} />
         </button>
       )}
-    </>
+    </div>
   );
 };
