@@ -225,7 +225,7 @@ const Popup: FC<{}> = (props) => {
         )}
       </div>
       <ReactTooltip
-        delayShow={400}
+        delayShow={300}
         padding={'5px 5px'}
         place="bottom"
         border
