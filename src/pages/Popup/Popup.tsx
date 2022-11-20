@@ -141,7 +141,11 @@ const Popup: FC<{}> = (props) => {
   }, [inputURL]);
 
   return (
-    <div className="container">
+    <div
+      className={
+        expanded ? 'container-header-expanded' : 'container-header-collapsed'
+      }
+    >
       <div className="header" style={{ display: expanded ? '' : 'none' }}>
         <div className="logo-container">
           <img src={LogoImage} alt="logo" className="logo-image" />

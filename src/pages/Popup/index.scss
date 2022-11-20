@@ -1,9 +1,14 @@
 @import "./globals.scss";
 @import "./common.scss";
 
-.container {
+.container-header-expanded {
   width: 46rem;
   height: 33rem;
+}
+
+.container-header-collapsed {
+  width: 46rem;
+  height: 36rem;
 }
 
 .header {
