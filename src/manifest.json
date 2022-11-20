@@ -11,7 +11,6 @@
   "icons": {
     "128": "logo.png"
   },
-  "devtools_page": "devtools.html",
   "web_accessible_resources": [
     {
       "resources": ["content.styles.css", "logo.png"],
