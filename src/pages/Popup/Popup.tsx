@@ -1,5 +1,11 @@
 import React, { useEffect, useState, FC, ChangeEvent, FormEvent } from 'react';
-import { HiSearch, HiOutlineBookmark, HiOutlineBookOpen } from 'react-icons/hi';
+import {
+  HiSearch,
+  HiOutlineBookmark,
+  HiOutlineBookOpen,
+  HiChevronUp,
+  HiChevronDown,
+} from 'react-icons/hi';
 import { TbBrowserPlus } from 'react-icons/tb';
 import Input from './Input';
 import LogoImage from './../../assets/img/logo.png';
@@ -37,6 +43,7 @@ const Popup: FC<{}> = (props) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [currentURLBookmarked, setCurrentURLBookmarked] =
     useState<boolean>(false);
+  const [expanded, setExpanded] = useState<boolean>(true);
 
   const checkIfURLBookmarked = async (url?: string) => {
     const isBookmarked = await isURLBookmarked(url ? url : validURL);
@@ -135,7 +142,7 @@ const Popup: FC<{}> = (props) => {
 
   return (
     <div className="container">
-      <div className="header">
+      <div className="header" style={{ display: expanded ? '' : 'none' }}>
         <div className="logo-container">
           <img src={LogoImage} alt="logo" className="logo-image" />
           <img src={LogoText} alt="logo text" className="logo-text" />
@@ -160,7 +167,7 @@ const Popup: FC<{}> = (props) => {
           </button>
           <button
             className="glass bounce-active"
-            data-tip="Toogle bookmark"
+            data-tip={currentURLBookmarked ? 'Remove bookmark' : 'Add bookmark'}
             onClick={handleToggleBookmark}
           >
             <HiOutlineBookmark
@@ -179,7 +186,7 @@ const Popup: FC<{}> = (props) => {
                       ? 'red-orange-gradient-text'
                       : 'purple-red-gradient-text'
                   }`}
-                  data-tip="Toggle URL prefix"
+                  data-tip="Change URL prefix"
                   onClick={() => handleURLPrefixChange(prefix)}
                 >
                   {prefix}
@@ -197,7 +204,25 @@ const Popup: FC<{}> = (props) => {
               </button>
             </div>
           </form>
+
+          <button
+            className="glass bounce-active"
+            data-tip="Collapse search bar"
+            onClick={() => setExpanded((val) => !val)}
+          >
+            {<HiChevronUp size={20} />}
+          </button>
         </div>
+      </div>
+
+      <div className="expander" style={{ display: expanded ? 'none' : '' }}>
+        <button
+          className="bounce-active"
+          data-tip="Expand search bar"
+          onClick={() => setExpanded((val) => !val)}
+        >
+          {<HiChevronDown size={20} color={'#fff'} />}
+        </button>
       </div>
 
       <div className="content">
