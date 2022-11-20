@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState, useRef } from 'react';
 import { HiX, HiCheck, HiTrash } from 'react-icons/hi';
-import { getAllBookmarks, actionOnBookmarks, URL_PREFIX } from './utils';
+import { getAllBookmarks, actionOnBookmarks } from './utils';
 interface Props {
   setShowModal: (showModal: boolean) => void;
   refreshBookmarks: () => void;

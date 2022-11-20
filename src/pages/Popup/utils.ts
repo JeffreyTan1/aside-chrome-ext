@@ -12,11 +12,23 @@ export enum CONSTANTS {
 
 // Helper functions
 export const isValidURL = (urlString: string) => {
+  let result = false;
+
   try {
-    return Boolean(new URL(urlString));
+    result = Boolean(new URL(urlString));
   } catch (e) {
-    return false;
+    // do nothing
   }
+
+  // if url doesn't start with http or https return false
+  if (
+    !urlString.startsWith(URL_PREFIX.HTTP) &&
+    !urlString.startsWith(URL_PREFIX.HTTPS)
+  ) {
+    result = false;
+  }
+
+  return result;
 };
 
 export const getURLPrefixAndDeprefixed = (url: string) => {
