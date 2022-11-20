@@ -11,6 +11,13 @@
   "icons": {
     "128": "logo.png"
   },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["contentScript.bundle.js"],
+      "css": ["content.styles.css"]
+    }
+  ],
   "web_accessible_resources": [
     {
       "resources": ["content.styles.css", "logo.png"],
