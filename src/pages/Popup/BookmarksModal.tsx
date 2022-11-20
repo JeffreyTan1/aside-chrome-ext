@@ -62,7 +62,7 @@ const BookmarksModal: FC<Props> = (props) => {
           </button>
         </div>
 
-        {bookmarks.length > 0 ? (
+        {bookmarks?.length > 0 ? (
           <ul className="bookmark-list">
             {bookmarks.map((bookmark) => (
               <li className="bookmark-item" key={bookmark}>
