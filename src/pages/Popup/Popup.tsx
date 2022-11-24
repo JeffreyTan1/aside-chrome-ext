@@ -22,6 +22,7 @@ import {
   isURLBookmarked,
   actionOnBookmarks,
   getActiveTab,
+  addRuleset,
 } from './utils';
 
 // import { ACTIONS } from '../modules/actions';
@@ -113,20 +114,6 @@ const Popup: FC<{}> = (props) => {
     setShowModal(false);
   };
 
-  // Get last valid URL from storage on load
-  useEffect(() => {
-    const getURL = async () => {
-      const persistentValidURL = await getLastValidURL();
-      if (!persistentValidURL) return;
-      updateURLStates(persistentValidURL);
-      setTimeout(() => {
-        setShowIframe(true);
-      }, 300);
-    };
-
-    getURL();
-  }, []);
-
   // Check if valid URL is bookmarked
   useEffect(() => {
     if (validURL) {
@@ -139,6 +126,20 @@ const Popup: FC<{}> = (props) => {
   useEffect(() => {
     checkIfURLBookmarked(`${prefix}${inputURL}`);
   }, [inputURL]);
+
+  // Get last valid URL from storage on load
+  useEffect(() => {
+    const getURL = async () => {
+      const persistentValidURL = await getLastValidURL();
+      if (!persistentValidURL) return;
+      updateURLStates(persistentValidURL);
+      setTimeout(() => {
+        setShowIframe(true);
+      }, 300);
+    };
+    addRuleset();
+    getURL();
+  }, []);
 
   return (
     <div
