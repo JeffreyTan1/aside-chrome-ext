@@ -214,7 +214,7 @@ const Popup: FC<{}> = (props) => {
             data-tip="Collapse search bar"
             onClick={() => setExpanded((val) => !val)}
           >
-            {<HiChevronUp size={20} />}
+            <HiChevronUp size={20} />
           </button>
         </div>
       </div>
@@ -225,7 +225,7 @@ const Popup: FC<{}> = (props) => {
           data-tip="Expand search bar"
           onClick={() => setExpanded((val) => !val)}
         >
-          {<HiChevronDown size={20} color={'#fff'} />}
+          <HiChevronDown size={20} color={'#fff'} />
         </button>
       </div>
 
