@@ -24,6 +24,7 @@ import {
   getActiveTab,
 } from './utils';
 import { addRulesets, removeRulesets } from './rulesetUtils';
+import { PORT_NAME } from '../Background';
 
 // import { ACTIONS } from '../modules/actions';
 
@@ -138,11 +139,8 @@ const Popup: FC<{}> = (props) => {
       }, 300);
     };
     addRulesets();
+    chrome.runtime.connect({ name: PORT_NAME });
     getURL();
-
-    return () => {
-      removeRulesets();
-    };
   }, []);
 
   return (

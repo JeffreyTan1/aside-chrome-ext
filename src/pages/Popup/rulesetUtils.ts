@@ -1,10 +1,11 @@
 // @ts-nocheck
+const RULE_ID = 1;
 
 export const addRulesets = () => {
   chrome.declarativeNetRequest.updateDynamicRules({
     addRules: [
       {
-        id: 1,
+        id: RULE_ID,
         priority: 1,
         action: {
           type: 'modifyHeaders',
@@ -25,11 +26,12 @@ export const addRulesets = () => {
         },
       },
     ],
+    removeRuleIds: [RULE_ID],
   });
 };
 
 export const removeRulesets = () => {
   chrome.declarativeNetRequest.updateDynamicRules({
-    removeRuleIds: [1],
+    removeRuleIds: [RULE_ID],
   });
 };
