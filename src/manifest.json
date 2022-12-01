@@ -23,11 +23,6 @@
       "matches": []
     }
   ],
-  "permissions": [
-    "declarativeNetRequest",
-    "declarativeNetRequestFeedback",
-    "storage",
-    "tabs"
-  ],
+  "permissions": ["declarativeNetRequest", "storage", "tabs"],
   "host_permissions": ["<all_urls>"]
 }
