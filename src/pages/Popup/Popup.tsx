@@ -23,7 +23,7 @@ import {
   actionOnBookmarks,
   getActiveTab,
 } from './utils';
-import { addRuleset } from './rulesetUtils';
+import { addRulesets, removeRulesets } from './rulesetUtils';
 
 // import { ACTIONS } from '../modules/actions';
 
@@ -137,8 +137,12 @@ const Popup: FC<{}> = (props) => {
         setShowIframe(true);
       }, 300);
     };
-    addRuleset();
+    addRulesets();
     getURL();
+
+    return () => {
+      removeRulesets();
+    };
   }, []);
 
   return (

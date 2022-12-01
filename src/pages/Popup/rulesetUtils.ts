@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-export const addRuleset = () => {
+export const addRulesets = () => {
   chrome.declarativeNetRequest.updateDynamicRules({
     addRules: [
       {
@@ -25,6 +25,11 @@ export const addRuleset = () => {
         },
       },
     ],
+  });
+};
+
+export const removeRulesets = () => {
+  chrome.declarativeNetRequest.updateDynamicRules({
     removeRuleIds: [1],
   });
 };
