@@ -23,6 +23,5 @@
       "matches": []
     }
   ],
-  "permissions": ["declarativeNetRequest", "storage", "tabs"],
-  "host_permissions": ["<all_urls>"]
+  "permissions": ["declarativeNetRequest", "storage", "tabs"]
 }
