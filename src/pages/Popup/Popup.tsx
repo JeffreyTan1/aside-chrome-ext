@@ -22,8 +22,8 @@ import {
   isURLBookmarked,
   actionOnBookmarks,
   getActiveTab,
-  addRuleset,
 } from './utils';
+import { addRuleset } from './rulesetUtils';
 
 // import { ACTIONS } from '../modules/actions';
 
