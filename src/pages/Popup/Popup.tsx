@@ -36,7 +36,6 @@ const Popup: FC<{}> = (props) => {
 
   // Iframe states
   const [validURL, setValidURL] = useState<string>('');
-  const [showIframe, setShowIframe] = useState<boolean>(false);
   const [iframeLoadCount, setIframeLoadCount] = useState<number>(0);
 
   // Show states
@@ -134,10 +133,8 @@ const Popup: FC<{}> = (props) => {
       const persistentValidURL = await getLastValidURL();
       if (!persistentValidURL) return;
       updateURLStates(persistentValidURL);
-      setTimeout(() => {
-        setShowIframe(true);
-      }, 300);
     };
+
     addRulesets();
     chrome.runtime.connect({ name: PORT_NAME });
     getURL();
@@ -238,15 +235,13 @@ const Popup: FC<{}> = (props) => {
             <p>Invalid URL entered. Please enter a valid URL and try again.</p>
           </div>
         ) : (
-          showIframe && (
-            <iframe
-              id={CONSTANTS.IFRAME_ID}
-              key={iframeLoadCount}
-              title={`Aside - ${validURL}`}
-              src={validURL}
-              loading="lazy"
-            />
-          )
+          <iframe
+            id={CONSTANTS.IFRAME_ID}
+            key={iframeLoadCount}
+            title={`Aside - ${validURL}`}
+            src={validURL}
+            loading="lazy"
+          />
         )}
         {showModal && (
           <BookmarksModal
