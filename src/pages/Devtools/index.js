@@ -1,1 +1,1 @@
-chrome.devtools.panels.create('Aside', 'logo.png', 'panel.html');
+// chrome.devtools.panels.create('Aside', 'logo.png', 'panel.html');
