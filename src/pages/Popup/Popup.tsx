@@ -37,6 +37,7 @@ const Popup: FC<{}> = (props) => {
   // Iframe states
   const [validURL, setValidURL] = useState<string>('');
   const [iframeLoadCount, setIframeLoadCount] = useState<number>(0);
+  const [showIframe, setShowIframe] = useState<boolean>(false);
 
   // Show states
   const [showInvalidURLError, setShowInvalidURLError] =
@@ -133,6 +134,10 @@ const Popup: FC<{}> = (props) => {
       const persistentValidURL = await getLastValidURL();
       if (!persistentValidURL) return;
       updateURLStates(persistentValidURL);
+
+      setTimeout(() => {
+        setShowIframe(true);
+      }, 200);
     };
 
     addRulesets();
@@ -235,13 +240,15 @@ const Popup: FC<{}> = (props) => {
             <p>Invalid URL entered. Please enter a valid URL and try again.</p>
           </div>
         ) : (
-          <iframe
-            id={CONSTANTS.IFRAME_ID}
-            key={iframeLoadCount}
-            title={`Aside - ${validURL}`}
-            src={validURL}
-            loading="lazy"
-          />
+          showIframe && (
+            <iframe
+              id={CONSTANTS.IFRAME_ID}
+              key={iframeLoadCount}
+              title={`Aside - ${validURL}`}
+              src={validURL}
+              loading="lazy"
+            />
+          )
         )}
         {showModal && (
           <BookmarksModal
