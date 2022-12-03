@@ -134,14 +134,12 @@ const Popup: FC<{}> = (props) => {
       const persistentValidURL = await getLastValidURL();
       if (!persistentValidURL) return;
       updateURLStates(persistentValidURL);
-
-      setTimeout(() => {
-        setShowIframe(true);
-      }, 200);
     };
-
     addRulesets();
     chrome.runtime.connect({ name: PORT_NAME });
+    setTimeout(() => {
+      setShowIframe(true);
+    }, 200);
     getURL();
   }, []);
 
